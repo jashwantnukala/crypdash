@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CRYPDASH 2020 — Crypto Market Analytics</title>
+<link rel="icon" type="image/png" href="https://png.pngtree.com/png-clipart/20240102/ourlarge/pngtree-green-red-trading-candlestick-logo-clipart-for-stock-forex-and-crypto-market-analysis-vector-image_12964995.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Clash+Display:wght@400;500;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
@@ -39,7 +40,7 @@
   --shadow:       0 4px 24px rgba(0,0,0,0.10);
   --grid:         rgba(0,0,0,0.05);
 }
-
+   
 :root {
   --green:  #00e07a;
   --blue:   #2196f3;
@@ -734,7 +735,7 @@ canvas { display:block; }
 <header>
   <div class="logo-area">
     <h1><span class="g">CRYP</span><span class="b">DASH</span></h1>
-    <div class="tagline">▸ Crypto Market Analytics · Full Year 2020 · 20 Coins · 6,708 Records</div>
+    <div class="tagline">• Crypto Market Analytics · Full Year 2020 · 20 Coins · 6,708 Records</div>
   </div>
   <div class="header-right">
     <div class="search-box">
@@ -742,7 +743,7 @@ canvas { display:block; }
       <input type="text" id="globalSearch" placeholder="Search coin…" oninput="onSearch(this.value)">
     </div>
     <div class="status-pill"><span class="live-dot"></span>CoinGecko Data 2020</div>
-    <button class="theme-toggle" id="themeBtn" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+    <button class="theme-toggle" id="themeBtn" onclick="toggleTheme()" title="Toggle theme">DARK</button>
   </div>
 </header>
 
@@ -755,31 +756,31 @@ canvas { display:block; }
     <div class="kpi-label">Total Records</div>
     <div class="kpi-value"><span class="counter" data-target="6708" data-format="comma">0</span></div>
     <div class="kpi-sub">Daily OHLCV entries</div>
-    <div class="kpi-trend">📊</div>
+    <div class="kpi-trend">[data]</div>
   </div>
   <div class="kpi" style="--kc:var(--blue)">
     <div class="kpi-label">Coins Tracked</div>
     <div class="kpi-value"><span class="counter" data-target="20">0</span></div>
     <div class="kpi-sub">Cryptocurrencies</div>
-    <div class="kpi-trend">🪙</div>
+    <div class="kpi-trend">[coin]</div>
   </div>
   <div class="kpi" style="--kc:var(--gold)">
     <div class="kpi-label">Best ROI 2020</div>
     <div class="kpi-value">+9.98x</div>
     <div class="kpi-sub">Chainlink · Strong Buy</div>
-    <div class="kpi-trend">🏆</div>
+    <div class="kpi-trend">[trophy]</div>
   </div>
   <div class="kpi" style="--kc:var(--red)">
     <div class="kpi-label">Worst ROI 2020</div>
     <div class="kpi-value">0.07x</div>
     <div class="kpi-sub">USD Coin · Avoid</div>
-    <div class="kpi-trend">📉</div>
+    <div class="kpi-trend">[down]</div>
   </div>
   <div class="kpi" style="--kc:var(--purple)">
     <div class="kpi-label">Avg Daily Return</div>
     <div class="kpi-value">+0.39%</div>
     <div class="kpi-sub">Across all 20 coins</div>
-    <div class="kpi-trend">📈</div>
+    <div class="kpi-trend">[up]</div>
   </div>
 </div>
 
@@ -799,11 +800,11 @@ canvas { display:block; }
 </div>
 
 <!-- ══ TOP 5 ════════════════════════════════════════════════════════════════ -->
-<div class="section-label"><span class="sl-icon">🥇</span> Top 5 Performers by ROI 2020</div>
+<div class="section-label"><span class="sl-icon">[1]</span> Top 5 Performers by ROI 2020</div>
 <div class="top-coins" id="topCoins"></div>
 
 <!-- ══ ROI CHART + LEADERBOARD ═════════════════════════════════════════════ -->
-<div class="section-label"><span class="sl-icon">📊</span> Performance Overview</div>
+<div class="section-label"><span class="sl-icon">[2]</span> Performance Overview</div>
 <div class="g21">
   <div class="card">
     <div class="card-title"><span class="ct-dot"></span>ROI 2020 — All 20 Cryptocurrencies</div>
@@ -830,7 +831,7 @@ canvas { display:block; }
 </div>
 
 <!-- ══ MONTHLY DYNAMICS ═════════════════════════════════════════════════════ -->
-<div class="section-label"><span class="sl-icon">📅</span> Monthly Market Dynamics</div>
+<div class="section-label"><span class="sl-icon">[3]</span> Monthly Market Dynamics</div>
 <div class="g2">
   <div class="card">
     <div class="card-title"><span class="ct-dot"></span>Average Daily Return by Month</div>
@@ -843,7 +844,7 @@ canvas { display:block; }
 </div>
 
 <!-- ══ PHASE CARDS ══════════════════════════════════════════════════════════ -->
-<div class="section-label"><span class="sl-icon">🌊</span> Market Phases — 2020</div>
+<div class="section-label"><span class="sl-icon">[4]</span> Market Phases — 2020</div>
 <div class="phase-grid" id="phaseCards"></div>
 
 <!-- ══ AVG CLOSE PRICE TREND ══════════════════════════════════════════════════ -->
@@ -863,7 +864,7 @@ canvas { display:block; }
 </div>
 
 <!-- ══ RISK ANALYSIS ════════════════════════════════════════════════════════ -->
-<div class="section-label"><span class="sl-icon">⚡</span> Risk & Return Analysis</div>
+<div class="section-label"><span class="sl-icon">[5]</span> Risk & Return Analysis</div>
 <div class="g2">
   <div class="card">
     <div class="card-title"><span class="ct-dot"></span>Risk vs. Return Scatter — All 20 Cryptos</div>
@@ -878,7 +879,7 @@ canvas { display:block; }
 </div>
 
 <!-- ══ MULTI-LINE TOP 5 ═════════════════════════════════════════════════════ -->
-<div class="section-label" style="margin-top:6px;"><span class="sl-icon">📈</span> Top 5 Coins — Monthly Return Trend</div>
+<div class="section-label" style="margin-top:6px;"><span class="sl-icon">[6]</span> Top 5 Coins — Monthly Return Trend</div>
 <div class="card" style="margin-bottom:16px;">
   <div class="card-title"><span class="ct-dot"></span>Chainlink · NEM · Cardano · Stellar · CRO — Avg Monthly Return</div>
   <div class="chart-wrap" style="height:280px;"><canvas id="multiLine"></canvas></div>
@@ -899,14 +900,14 @@ canvas { display:block; }
 </div>
 
 <!-- ══ PRICE RANGE CHART ════════════════════════════════════════════════════ -->
-<div class="section-label"><span class="sl-icon">📏</span> Price Range — High / Low / Avg (2020)</div>
+<div class="section-label"><span class="sl-icon">[7]</span> Price Range — High / Low / Avg (2020)</div>
 <div class="card" style="margin-bottom:16px;">
   <div class="card-title"><span class="ct-dot"></span>Full-Year High · Average · Low for Each Coin</div>
   <div id="priceRangeChart" class="price-range-row" style="padding:8px 0;"></div>
 </div>
 
 <!-- ══ FULL COMPARISON TABLE ════════════════════════════════════════════════ -->
-<div class="section-label"><span class="sl-icon">🔍</span> Full Coin Comparison Table</div>
+<div class="section-label"><span class="sl-icon">[8]</span> Full Coin Comparison Table</div>
 <div class="card" style="padding:0;overflow:hidden;margin-bottom:16px;">
   <div style="padding:20px 24px 12px;border-bottom:1px solid var(--border);">
     <div class="card-title" style="margin:0;"><span class="ct-dot"></span>All 20 Cryptocurrencies — Sortable · Click for Detail</div>
@@ -937,7 +938,7 @@ canvas { display:block; }
 <!-- ══ COIN DETAIL MODAL ════════════════════════════════════════════════════ -->
 <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
   <div class="modal" id="modalContent">
-    <button class="modal-close" onclick="document.getElementById('modalOverlay').classList.remove('open')">✕</button>
+    <button class="modal-close" onclick="document.getElementById('modalOverlay').classList.remove('open')">X</button>
     <div class="modal-coin-header">
       <div class="modal-coin-icon" id="mIcon"></div>
       <div>
@@ -964,7 +965,7 @@ canvas { display:block; }
       </p>
     </div>
     <div class="footer-contacts">
-      <div class="footer-contacts-label">📬 Team Contacts</div>
+      <div class="footer-contacts-label">CONTACTS</div>
       <a class="email-link" href="mailto:jashwantnukala2025.comp@mmcoe.edu.in">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
         jashwantnukala2025.comp@mmcoe.edu.in
@@ -1088,7 +1089,7 @@ function toggleTheme(){
   const html = document.documentElement;
   const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
   html.setAttribute('data-theme', next);
-  document.getElementById('themeBtn').textContent = next==='dark' ? '🌙' : '☀️';
+  document.getElementById('themeBtn').textContent = next==='dark' ? 'DARK' : 'LIGHT';
   Chart.defaults.color = getTextColor();
   Object.values(Chart.instances).forEach(c => c.update());
 }
@@ -1161,7 +1162,7 @@ function buildTicker(){
     return `<span class="ticker-item">
       <span class="t-name">${c.name.split('-')[0].toUpperCase()}</span>
       <span class="t-val">${c.roi.toFixed(2)}x</span>
-      <span class="${pos?'t-pos':'t-neg'}">${pos?'▲':'▼'} ${(c.ret*100).toFixed(2)}%</span>
+      <span class="${pos?'t-pos':'t-neg'}">${pos?'RISE':'FALL'} ${(c.ret*100).toFixed(2)}%</span>
     </span>`;
   }).join('');
   document.getElementById('ticker').innerHTML = items + items;
@@ -1178,7 +1179,7 @@ function buildTopCoins(){
       <div>
         <div class="badge-coin-name">${cap(c.name)}</div>
         <div class="badge-roi">ROI ${c.roi.toFixed(2)}x · ${c.rec}</div>
-        <div class="badge-hint">Click for details →</div>
+        <div class="badge-hint">Click for details »</div>
       </div>
     </div>
   `).join('');

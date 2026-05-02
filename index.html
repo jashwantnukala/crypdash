@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CRYPDASH 2020 — Crypto Market Analytics</title>
-<link rel="icon" type="image/png" href="https://png.pngtree.com/png-clipart/20240102/ourlarge/pngtree-green-red-trading-candlestick-logo-clipart-for-stock-forex-and-crypto-market-analysis-vector-image_12964995.png">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2306060f'/%3E%3C!-- Candle 1 (green) --%3E%3Crect x='5' y='12' width='4' height='10' rx='1' fill='%2300e07a'/%3E%3Cline x1='7' y1='8' x2='7' y2='12' stroke='%2300e07a' stroke-width='1.5'/%3E%3Cline x1='7' y1='22' x2='7' y2='26' stroke='%2300e07a' stroke-width='1.5'/%3E%3C!-- Candle 2 (red) --%3E%3Crect x='13' y='8' width='4' height='8' rx='1' fill='%23ff4757'/%3E%3Cline x1='15' y1='5' x2='15' y2='8' stroke='%23ff4757' stroke-width='1.5'/%3E%3Cline x1='15' y1='16' x2='15' y2='20' stroke='%23ff4757' stroke-width='1.5'/%3E%3C!-- Candle 3 (green) --%3E%3Crect x='21' y='10' width='4' height='12' rx='1' fill='%2300e07a'/%3E%3Cline x1='23' y1='6' x2='23' y2='10' stroke='%2300e07a' stroke-width='1.5'/%3E%3Cline x1='23' y1='22' x2='23' y2='27' stroke='%2300e07a' stroke-width='1.5'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Clash+Display:wght@400;500;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
@@ -185,17 +185,22 @@ header {
 
 /* Theme Toggle */
 .theme-toggle {
-  width:40px; height:40px;
+  height:40px;
+  padding:0 14px;
   border-radius:10px;
   border:1px solid var(--border);
   background:var(--surface);
   color:var(--text);
   cursor:pointer;
-  display:flex; align-items:center; justify-content:center;
+  display:flex; align-items:center; justify-content:center; gap:6px;
   transition:all 0.2s;
-  font-size:1.1rem;
+  font-size:0.75rem;
+  font-family:'Space Mono',monospace;
+  letter-spacing:0.06em;
+  white-space:nowrap;
 }
 .theme-toggle:hover { border-color:var(--border2); background:var(--surface2); }
+.theme-toggle .toggle-emoji { font-size:1.1rem; line-height:1; }
 
 /* Status pill */
 .status-pill {
@@ -743,7 +748,10 @@ canvas { display:block; }
       <input type="text" id="globalSearch" placeholder="Search coin…" oninput="onSearch(this.value)">
     </div>
     <div class="status-pill"><span class="live-dot"></span>CoinGecko Data 2020</div>
-    <button class="theme-toggle" id="themeBtn" onclick="toggleTheme()" title="Toggle theme">DARK</button>
+    <button class="theme-toggle" id="themeBtn" onclick="toggleTheme()" title="Toggle theme">
+      <span class="toggle-emoji" id="toggleEmoji">🌙</span>
+      <span id="toggleLabel">DARK</span>
+    </button>
   </div>
 </header>
 
@@ -1070,9 +1078,6 @@ function fmtPrice(n){
   return '$'+n.toFixed(4);
 }
 
-const getColor = (v) => v===getComputedStyle(document.documentElement).getPropertyValue('--green').trim()
-  ? v : v;
-
 const chartColors = {
   green:  '#00e07a', blue: '#2196f3', red: '#ff4757',
   gold:   '#ffc107', purple:'#9c27b0', orange:'#ff9800',
@@ -1089,7 +1094,8 @@ function toggleTheme(){
   const html = document.documentElement;
   const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
   html.setAttribute('data-theme', next);
-  document.getElementById('themeBtn').textContent = next==='dark' ? 'DARK' : 'LIGHT';
+  document.getElementById('toggleEmoji').textContent = next === 'dark' ? '🌙' : '☀️';
+  document.getElementById('toggleLabel').textContent = next === 'dark' ? 'DARK' : 'LIGHT';
   Chart.defaults.color = getTextColor();
   Object.values(Chart.instances).forEach(c => c.update());
 }
@@ -1259,7 +1265,6 @@ function buildMonthTable(){
 // ═══════════════════════════════════════════════════════════════════════════
 function buildPriceRange(){
   const el = document.getElementById('priceRangeChart');
-  // Use log scale for visual comparison (prices vary hugely)
   const maxLog = Math.max(...coins.map(c=>Math.log10(c.maxHigh+0.0001)));
   const minLog = Math.min(...coins.map(c=>Math.log10(c.minLow+0.0001)));
   const range = maxLog - minLog;
@@ -1356,7 +1361,6 @@ function openModal(idx){
     ['Signal',     `<span class="rec-badge ${recClass[c.rec]}">${c.rec}</span>`],
   ].map(([l,v]) => `<div class="modal-stat"><div class="modal-stat-label">${l}</div><div class="modal-stat-val">${v}</div></div>`).join('');
 
-  // Sparkline
   if(modalChartInstance){ modalChartInstance.destroy(); modalChartInstance=null; }
   const coinKey = Object.keys(monthlyByCoin).find(k=>k===c.name);
   const sparkData = coinKey

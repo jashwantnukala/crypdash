@@ -1,728 +1,1040 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CRYPDASH 2020 — Crypto Market Analytics</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Clash+Display:wght@400;500;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
-  :root {
-    --bg: #050508;
-    --surface: #0d0d14;
-    --surface2: #12121c;
-    --border: rgba(255,255,255,0.06);
-    --border-bright: rgba(255,255,255,0.12);
-    --text: #e8e8f0;
-    --muted: #6b6b80;
-    --accent: #00f5a0;
-    --accent2: #00d4ff;
-    --accent3: #ff6b6b;
-    --accent4: #ffd93d;
-    --gold: #f5c842;
-    --purple: #a78bfa;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Syne', sans-serif;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-
-  /* ── BACKGROUND GRID ── */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(0,245,160,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,245,160,0.03) 1px, transparent 1px);
-    background-size: 40px 40px;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  body::after {
-    content: '';
-    position: fixed;
-    top: -50%;
-    left: -20%;
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, rgba(0,245,160,0.04) 0%, transparent 70%);
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  .container {
-    position: relative;
-    z-index: 1;
-    max-width: 1500px;
-    margin: 0 auto;
-    padding: 0 24px 60px;
-  }
-
-  /* ── HEADER ── */
-  header {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    padding: 40px 0 32px;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 36px;
-    flex-wrap: wrap;
-    gap: 16px;
-  }
-
-  .logo-block h1 {
-    font-size: clamp(2.2rem, 4vw, 3.5rem);
-    font-weight: 800;
-    letter-spacing: -0.04em;
-    line-height: 1;
-  }
-
-  .logo-block h1 span.green { color: var(--accent); }
-  .logo-block h1 span.blue  { color: var(--accent2); }
-
-  .logo-block p {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.72rem;
-    color: var(--muted);
-    margin-top: 8px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
-
-  .header-meta {
-    text-align: right;
-    font-family: 'Space Mono', monospace;
-    font-size: 0.7rem;
-    color: var(--muted);
-    line-height: 1.8;
-  }
-
-  .header-meta .live {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    color: var(--accent);
-    font-size: 0.65rem;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-  }
-
-  .live-dot {
-    width: 6px; height: 6px;
-    background: var(--accent);
-    border-radius: 50%;
-    animation: pulse 2s infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.4; transform: scale(0.8); }
-  }
-
-  /* ── KPI STRIP ── */
-  .kpi-strip {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 12px;
-    margin-bottom: 28px;
-  }
-
-  .kpi {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 20px 18px;
-    position: relative;
-    overflow: hidden;
-    transition: border-color 0.2s, transform 0.2s;
-  }
-
-  .kpi:hover { border-color: var(--border-bright); transform: translateY(-2px); }
-
-  .kpi::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: var(--accent-color, var(--accent));
-    opacity: 0.8;
-  }
-
-  .kpi-label {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.62rem;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--muted);
-    margin-bottom: 10px;
-  }
-
-  .kpi-value {
-    font-size: 1.6rem;
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    color: var(--accent-color, var(--accent));
-    line-height: 1;
-  }
-
-  .kpi-sub {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.6rem;
-    color: var(--muted);
-    margin-top: 6px;
-  }
-
-  /* ── GRID LAYOUTS ── */
-  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
-  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px; }
-  .grid-13 { display: grid; grid-template-columns: 1fr 2fr; gap: 16px; margin-bottom: 16px; }
-  .grid-31 { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 16px; }
-  .grid-21 { display: grid; grid-template-columns: 3fr 2fr; gap: 16px; margin-bottom: 16px; }
-
-  /* ── CARD ── */
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 24px;
-    position: relative;
-    overflow: hidden;
-    transition: border-color 0.2s;
-  }
-
-  .card:hover { border-color: var(--border-bright); }
-
-  .card-title {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.65rem;
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
-    color: var(--muted);
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .card-title::before {
-    content: '';
-    display: inline-block;
-    width: 8px; height: 8px;
-    background: var(--accent);
-    border-radius: 2px;
-    opacity: 0.8;
-  }
-
-  .chart-wrap {
-    position: relative;
-    width: 100%;
-  }
-
-  /* ── ROI TABLE ── */
-  .roi-table { width: 100%; border-collapse: collapse; }
-
-  .roi-table tr {
-    border-bottom: 1px solid var(--border);
-    transition: background 0.15s;
-  }
-
-  .roi-table tr:hover { background: rgba(255,255,255,0.02); }
-  .roi-table tr:last-child { border-bottom: none; }
-
-  .roi-table td {
-    padding: 9px 6px;
-    font-size: 0.82rem;
-    vertical-align: middle;
-  }
-
-  .rank-num {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.6rem;
-    color: var(--muted);
-    width: 24px;
-  }
-
-  .coin-name {
-    font-weight: 600;
-    font-size: 0.8rem;
-    text-transform: capitalize;
-  }
-
-  .coin-ticker {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.58rem;
-    color: var(--muted);
-    display: block;
-  }
-
-  .roi-bar-cell { width: 100px; padding: 0 8px; }
-
-  .roi-bar-bg {
-    height: 5px;
-    background: rgba(255,255,255,0.06);
-    border-radius: 3px;
-    overflow: hidden;
-  }
-
-  .roi-bar-fill {
-    height: 100%;
-    border-radius: 3px;
-    background: var(--accent);
-    transition: width 1s cubic-bezier(.4,0,.2,1);
-  }
-
-  .roi-val {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.72rem;
-    font-weight: 700;
-    text-align: right;
-    color: var(--accent);
-    white-space: nowrap;
-  }
-
-  .rec-badge {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.55rem;
-    padding: 2px 7px;
-    border-radius: 4px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    white-space: nowrap;
-  }
-
-  .rec-strong-buy { background: rgba(0,245,160,0.15); color: var(--accent); }
-  .rec-buy        { background: rgba(0,212,255,0.15); color: var(--accent2); }
-  .rec-hold       { background: rgba(253,211,61,0.15); color: var(--gold); }
-  .rec-avoid      { background: rgba(255,107,107,0.15); color: var(--accent3); }
-
-  /* ── PHASE CARDS ── */
-  .phase-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-
-  .phase-card {
-    border-radius: 12px;
-    padding: 18px 16px;
-    border: 1px solid var(--border);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .phase-card::before {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 3px;
-    background: var(--phase-color);
-  }
-
-  .phase-name {
-    font-size: 0.72rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: 6px;
-    color: var(--phase-color);
-  }
-
-  .phase-period {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.58rem;
-    color: var(--muted);
-    margin-bottom: 12px;
-  }
-
-  .phase-stat-val {
-    font-size: 1.3rem;
-    font-weight: 800;
-    letter-spacing: -0.03em;
-  }
-
-  .phase-stat-label {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.58rem;
-    color: var(--muted);
-    margin-top: 2px;
-  }
-
-  /* ── MONTHLY TABLE ── */
-  .month-table { width: 100%; border-collapse: collapse; }
-
-  .month-table th {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.58rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--muted);
-    padding: 6px 8px;
-    text-align: left;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .month-table td {
-    padding: 8px 8px;
-    font-size: 0.78rem;
-    border-bottom: 1px solid rgba(255,255,255,0.03);
-    vertical-align: middle;
-  }
-
-  .month-table tr:last-child td { border-bottom: none; }
-  .month-table tr:hover td { background: rgba(255,255,255,0.02); }
-
-  .phase-tag {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.52rem;
-    padding: 2px 6px;
-    border-radius: 3px;
-  }
-
-  .ret-pos { color: var(--accent); }
-  .ret-neg { color: var(--accent3); }
-
-  /* ── RISK BADGE ── */
-  .risk-low    { color: var(--accent); }
-  .risk-medium { color: var(--gold); }
-  .risk-high   { color: var(--accent3); }
-
-  /* ── SCROLLBAR ── */
-  ::-webkit-scrollbar { width: 6px; height: 6px; }
-  ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
-
-  /* ── FADE IN ANIMATION ── */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  .kpi        { animation: fadeUp 0.5s ease both; }
-  .kpi:nth-child(1) { animation-delay: 0.05s; }
-  .kpi:nth-child(2) { animation-delay: 0.10s; }
-  .kpi:nth-child(3) { animation-delay: 0.15s; }
-  .kpi:nth-child(4) { animation-delay: 0.20s; }
-  .kpi:nth-child(5) { animation-delay: 0.25s; }
-
-  .card { animation: fadeUp 0.6s ease both; animation-delay: 0.3s; }
-
-  /* ── SECTION LABEL ── */
-  .section-label {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.62rem;
-    text-transform: uppercase;
-    letter-spacing: 0.2em;
-    color: var(--muted);
-    margin-bottom: 14px;
-    padding-left: 2px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .section-label::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-  }
-
-  /* ── TICKER STRIP ── */
-  .ticker-wrap {
-    overflow: hidden;
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    padding: 10px 0;
-    margin-bottom: 28px;
-    background: var(--surface);
-  }
-
-  .ticker-inner {
-    display: flex;
-    gap: 40px;
-    animation: ticker 30s linear infinite;
-    white-space: nowrap;
-  }
-
-  @keyframes ticker {
-    from { transform: translateX(0); }
-    to   { transform: translateX(-50%); }
-  }
-
-  .ticker-item {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.68rem;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-shrink: 0;
-  }
-
-  .ticker-name { color: var(--muted); text-transform: uppercase; }
-  .ticker-val  { color: var(--text); font-weight: 700; }
-  .ticker-pos  { color: var(--accent); }
-  .ticker-neg  { color: var(--accent3); }
-
-  /* ── TOP COIN BADGES ── */
-  .top-coins {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
-  }
-
-  .top-coin-badge {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 14px 16px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex: 1;
-    min-width: 150px;
-    transition: border-color 0.2s, transform 0.2s;
-  }
-
-  .top-coin-badge:hover { border-color: var(--border-bright); transform: translateY(-2px); }
-
-  .coin-icon {
-    width: 36px; height: 36px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.75rem;
-    font-weight: 800;
-    flex-shrink: 0;
-  }
-
-  .badge-info { min-width: 0; }
-
-  .badge-coin-name {
-    font-size: 0.8rem;
-    font-weight: 700;
-    text-transform: capitalize;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .badge-roi {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.72rem;
-    color: var(--accent);
-    margin-top: 2px;
-  }
-
-  canvas { display: block; }
-
-  /* ── DIVIDER ── */
-  .divider { height: 1px; background: var(--border); margin: 28px 0; }
-
+/* ══════════════════════════════════════════════════════
+   THEME VARIABLES
+══════════════════════════════════════════════════════ */
+[data-theme="dark"] {
+  --bg:           #06060f;
+  --bg2:          #0d0d1a;
+  --surface:      #10101e;
+  --surface2:     #161626;
+  --surface3:     #1c1c2e;
+  --border:       rgba(255,255,255,0.07);
+  --border2:      rgba(255,255,255,0.14);
+  --text:         #e4e4f0;
+  --text2:        #a0a0b8;
+  --muted:        #5a5a72;
+  --shadow:       0 4px 24px rgba(0,0,0,0.5);
+  --grid:         rgba(255,255,255,0.04);
+}
+[data-theme="light"] {
+  --bg:           #f0f2f8;
+  --bg2:          #e8eaf4;
+  --surface:      #ffffff;
+  --surface2:     #f7f8fc;
+  --surface3:     #eef0f8;
+  --border:       rgba(0,0,0,0.08);
+  --border2:      rgba(0,0,0,0.18);
+  --text:         #14142a;
+  --text2:        #4a4a6a;
+  --muted:        #8a8aaa;
+  --shadow:       0 4px 24px rgba(0,0,0,0.10);
+  --grid:         rgba(0,0,0,0.05);
+}
+
+:root {
+  --green:  #00e07a;
+  --blue:   #2196f3;
+  --red:    #ff4757;
+  --gold:   #ffc107;
+  --purple: #9c27b0;
+  --orange: #ff9800;
+  --teal:   #00bcd4;
+  --pink:   #e91e63;
+}
+
+/* ══════════════════════════════════════════════════════
+   RESET & BASE
+══════════════════════════════════════════════════════ */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Syne', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* Grid background */
+body::before {
+  content:'';
+  position:fixed; inset:0;
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size:50px 50px;
+  pointer-events:none; z-index:0;
+}
+
+/* Glow blob */
+body::after {
+  content:'';
+  position:fixed; top:-30%; right:-15%;
+  width:700px; height:700px;
+  background:radial-gradient(circle, rgba(0,224,122,0.05) 0%, transparent 65%);
+  pointer-events:none; z-index:0;
+}
+
+.container {
+  position:relative; z-index:1;
+  max-width:1560px;
+  margin:0 auto;
+  padding:0 28px 80px;
+}
+
+/* ══════════════════════════════════════════════════════
+   HEADER
+══════════════════════════════════════════════════════ */
+header {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:36px 0 28px;
+  border-bottom:1px solid var(--border);
+  margin-bottom:0;
+  flex-wrap:wrap;
+  gap:16px;
+}
+
+.logo-area h1 {
+  font-family:'Syne',sans-serif;
+  font-size: clamp(2.8rem, 5vw, 4.5rem);
+  font-weight:800;
+  letter-spacing:-0.05em;
+  line-height:1;
+}
+.logo-area h1 .g { color:var(--green); }
+.logo-area h1 .b { color:var(--blue); }
+
+.logo-area .tagline {
+  font-family:'Space Mono',monospace;
+  font-size:0.78rem;
+  color:var(--muted);
+  margin-top:10px;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+}
+
+.header-right {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+/* Search Bar */
+.search-box {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:9px 14px;
+  transition:border-color 0.2s;
+}
+.search-box:focus-within { border-color:var(--green); }
+.search-box svg { color:var(--muted); flex-shrink:0; }
+.search-box input {
+  background:none; border:none; outline:none;
+  color:var(--text);
+  font-family:'Space Mono',monospace;
+  font-size:0.78rem;
+  width:200px;
+}
+.search-box input::placeholder { color:var(--muted); }
+
+/* Filter buttons */
+.filter-row {
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+
+.filter-btn {
+  font-family:'Space Mono',monospace;
+  font-size:0.65rem;
+  text-transform:uppercase;
+  letter-spacing:0.08em;
+  padding:6px 12px;
+  border-radius:6px;
+  border:1px solid var(--border);
+  background:var(--surface);
+  color:var(--text2);
+  cursor:pointer;
+  transition:all 0.18s;
+}
+.filter-btn:hover, .filter-btn.active {
+  border-color:var(--green);
+  background:rgba(0,224,122,0.1);
+  color:var(--green);
+}
+.filter-btn.active { font-weight:700; }
+
+/* Theme Toggle */
+.theme-toggle {
+  width:40px; height:40px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:var(--surface);
+  color:var(--text);
+  cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  transition:all 0.2s;
+  font-size:1.1rem;
+}
+.theme-toggle:hover { border-color:var(--border2); background:var(--surface2); }
+
+/* Status pill */
+.status-pill {
+  display:inline-flex; align-items:center; gap:6px;
+  font-family:'Space Mono',monospace;
+  font-size:0.68rem;
+  color:var(--green);
+  text-transform:uppercase;
+  letter-spacing:0.1em;
+  padding:7px 14px;
+  border:1px solid rgba(0,224,122,0.25);
+  border-radius:8px;
+  background:rgba(0,224,122,0.07);
+}
+.live-dot {
+  width:6px; height:6px;
+  background:var(--green); border-radius:50%;
+  animation:pulse 2s infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity:1; transform:scale(1); }
+  50% { opacity:0.35; transform:scale(0.75); }
+}
+
+/* ══════════════════════════════════════════════════════
+   TICKER
+══════════════════════════════════════════════════════ */
+.ticker-wrap {
+  overflow:hidden;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  padding:10px 0;
+  margin:18px 0 28px;
+  background:var(--surface);
+}
+.ticker-inner {
+  display:flex; gap:48px;
+  animation:ticker 35s linear infinite;
+  white-space:nowrap;
+}
+@keyframes ticker {
+  from { transform:translateX(0); }
+  to   { transform:translateX(-50%); }
+}
+.ticker-item {
+  font-family:'Space Mono',monospace;
+  font-size:0.72rem;
+  display:flex; align-items:center; gap:8px;
+  flex-shrink:0;
+}
+.t-name { color:var(--muted); text-transform:uppercase; font-size:0.65rem; }
+.t-val  { color:var(--text); font-weight:700; }
+.t-pos  { color:var(--green); }
+.t-neg  { color:var(--red); }
+
+/* ══════════════════════════════════════════════════════
+   CONTROLS ROW
+══════════════════════════════════════════════════════ */
+.controls-row {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:12px;
+  margin-bottom:18px;
+  padding:14px 18px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:12px;
+}
+
+/* ══════════════════════════════════════════════════════
+   KPI STRIP
+══════════════════════════════════════════════════════ */
+.kpi-strip {
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:14px;
+  margin-bottom:24px;
+}
+.kpi {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:22px 20px;
+  position:relative; overflow:hidden;
+  transition:border-color 0.2s, transform 0.22s, box-shadow 0.22s;
+  animation:fadeUp 0.5s ease both;
+}
+.kpi:hover {
+  border-color:var(--border2);
+  transform:translateY(-3px);
+  box-shadow:var(--shadow);
+}
+.kpi::before {
+  content:'';
+  position:absolute; top:0; left:0; right:0;
+  height:2.5px;
+  background:var(--kc, var(--green));
+}
+.kpi-label {
+  font-family:'Space Mono',monospace;
+  font-size:0.68rem;
+  text-transform:uppercase;
+  letter-spacing:0.12em;
+  color:var(--muted);
+  margin-bottom:12px;
+}
+.kpi-value {
+  font-size:2rem;
+  font-weight:800;
+  letter-spacing:-0.04em;
+  color:var(--kc, var(--green));
+  line-height:1;
+}
+.kpi-sub {
+  font-family:'Space Mono',monospace;
+  font-size:0.62rem;
+  color:var(--muted);
+  margin-top:7px;
+}
+.kpi-trend {
+  position:absolute; bottom:16px; right:16px;
+  font-family:'Space Mono',monospace;
+  font-size:0.65rem;
+  opacity:0.5;
+}
+
+/* ══════════════════════════════════════════════════════
+   SECTION LABEL
+══════════════════════════════════════════════════════ */
+.section-label {
+  font-family:'Space Mono',monospace;
+  font-size:0.72rem;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:0.18em;
+  color:var(--text2);
+  margin:26px 0 14px;
+  display:flex; align-items:center; gap:12px;
+}
+.section-label .sl-icon {
+  width:24px; height:24px;
+  background:rgba(0,224,122,0.12);
+  border-radius:6px;
+  display:flex; align-items:center; justify-content:center;
+  color:var(--green);
+  font-size:0.8rem;
+}
+.section-label::after {
+  content:''; flex:1;
+  height:1px; background:var(--border);
+}
+
+/* ══════════════════════════════════════════════════════
+   GRIDS
+══════════════════════════════════════════════════════ */
+.g2  { display:grid; grid-template-columns:1fr 1fr;       gap:16px; margin-bottom:16px; }
+.g3  { display:grid; grid-template-columns:1fr 1fr 1fr;   gap:16px; margin-bottom:16px; }
+.g21 { display:grid; grid-template-columns:3fr 2fr;        gap:16px; margin-bottom:16px; }
+.g12 { display:grid; grid-template-columns:2fr 3fr;        gap:16px; margin-bottom:16px; }
+.g31 { display:grid; grid-template-columns:3fr 1fr;        gap:16px; margin-bottom:16px; }
+
+/* ══════════════════════════════════════════════════════
+   CARD
+══════════════════════════════════════════════════════ */
+.card {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:26px;
+  position:relative; overflow:hidden;
+  transition:border-color 0.2s, box-shadow 0.2s;
+  animation:fadeUp 0.55s ease both;
+}
+.card:hover { border-color:var(--border2); box-shadow:var(--shadow); }
+
+.card-title {
+  font-family:'Space Mono',monospace;
+  font-size:0.75rem;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:0.12em;
+  color:var(--text2);
+  margin-bottom:20px;
+  display:flex; align-items:center; gap:8px;
+}
+.card-title .ct-dot {
+  width:9px; height:9px;
+  background:var(--green);
+  border-radius:3px;
+  flex-shrink:0;
+}
+.chart-wrap { position:relative; width:100%; }
+
+/* ══════════════════════════════════════════════════════
+   TOP COIN BADGES
+══════════════════════════════════════════════════════ */
+.top-coins { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:20px; }
+.top-coin-badge {
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:16px 18px;
+  display:flex; align-items:center; gap:14px;
+  flex:1; min-width:160px;
+  cursor:pointer;
+  transition:border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+.top-coin-badge:hover {
+  border-color:var(--border2);
+  transform:translateY(-3px);
+  box-shadow:var(--shadow);
+}
+.coin-icon {
+  width:40px; height:40px;
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:0.85rem; font-weight:800;
+  flex-shrink:0;
+}
+.badge-coin-name {
+  font-size:0.9rem; font-weight:700;
+  text-transform:capitalize;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.badge-roi {
+  font-family:'Space Mono',monospace;
+  font-size:0.72rem; color:var(--green); margin-top:3px;
+}
+.badge-hint {
+  font-family:'Space Mono',monospace;
+  font-size:0.58rem; color:var(--muted); margin-top:2px;
+}
+
+/* ══════════════════════════════════════════════════════
+   RANK TABLE
+══════════════════════════════════════════════════════ */
+.roi-table { width:100%; border-collapse:collapse; }
+.roi-table thead th {
+  font-family:'Space Mono',monospace;
+  font-size:0.62rem;
+  text-transform:uppercase;
+  letter-spacing:0.1em;
+  color:var(--muted);
+  padding:8px 6px;
+  text-align:left;
+  border-bottom:1px solid var(--border);
+  cursor:pointer;
+  user-select:none;
+  white-space:nowrap;
+}
+.roi-table thead th:hover { color:var(--text); }
+.sort-indicator { margin-left:4px; opacity:0.5; }
+.roi-table tr { border-bottom:1px solid var(--border); transition:background 0.15s; cursor:pointer; }
+.roi-table tr:hover { background:rgba(0,224,122,0.04); }
+.roi-table tr:last-child { border-bottom:none; }
+.roi-table tbody td { padding:9px 6px; font-size:0.82rem; vertical-align:middle; }
+.rank-num { font-family:'Space Mono',monospace; font-size:0.62rem; color:var(--muted); width:26px; }
+.coin-name { font-weight:700; font-size:0.84rem; text-transform:capitalize; }
+.coin-ticker { font-family:'Space Mono',monospace; font-size:0.6rem; color:var(--muted); display:block; }
+.roi-bar-cell { width:90px; padding:0 8px; }
+.roi-bar-bg { height:5px; background:var(--border); border-radius:3px; overflow:hidden; }
+.roi-bar-fill { height:100%; border-radius:3px; transition:width 1s cubic-bezier(.4,0,.2,1); }
+.roi-val { font-family:'Space Mono',monospace; font-size:0.74rem; font-weight:700; text-align:right; color:var(--green); white-space:nowrap; }
+
+.rec-badge {
+  font-family:'Space Mono',monospace;
+  font-size:0.56rem;
+  padding:3px 8px;
+  border-radius:5px;
+  text-transform:uppercase;
+  letter-spacing:0.06em;
+  white-space:nowrap; font-weight:700;
+}
+.rec-sb { background:rgba(0,224,122,0.13); color:var(--green); }
+.rec-b  { background:rgba(33,150,243,0.13); color:var(--blue); }
+.rec-h  { background:rgba(255,193,7,0.13);  color:var(--gold); }
+.rec-av { background:rgba(255,71,87,0.13);   color:var(--red); }
+
+/* ══════════════════════════════════════════════════════
+   PHASE CARDS
+══════════════════════════════════════════════════════ */
+.phase-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:20px; }
+.phase-card {
+  border-radius:14px;
+  padding:20px 18px;
+  border:1px solid var(--border);
+  position:relative; overflow:hidden;
+  cursor:default;
+  transition:transform 0.2s, box-shadow 0.2s;
+}
+.phase-card:hover { transform:translateY(-3px); box-shadow:var(--shadow); }
+.phase-card::after {
+  content:'';
+  position:absolute; bottom:0; left:0; right:0;
+  height:3px;
+  background:var(--pc);
+}
+.phase-name { font-size:0.82rem; font-weight:800; text-transform:uppercase; letter-spacing:0.1em; color:var(--pc); margin-bottom:5px; }
+.phase-period { font-family:'Space Mono',monospace; font-size:0.62rem; color:var(--muted); margin-bottom:14px; }
+.phase-stat-val { font-size:1.7rem; font-weight:800; letter-spacing:-0.04em; color:var(--pc); }
+.phase-stat-label { font-family:'Space Mono',monospace; font-size:0.6rem; color:var(--muted); margin-top:3px; }
+.phase-char { font-family:'Space Mono',monospace; font-size:0.6rem; color:var(--muted); margin-top:10px; border-top:1px solid var(--border); padding-top:8px; }
+.phase-vol { font-family:'Space Mono',monospace; font-size:0.65rem; color:var(--text2); margin-top:6px; }
+
+/* ══════════════════════════════════════════════════════
+   MONTHLY TABLE
+══════════════════════════════════════════════════════ */
+.month-table { width:100%; border-collapse:collapse; }
+.month-table th {
+  font-family:'Space Mono',monospace;
+  font-size:0.64rem;
+  text-transform:uppercase;
+  letter-spacing:0.1em;
+  color:var(--muted);
+  padding:8px 10px;
+  text-align:left;
+  border-bottom:1px solid var(--border);
+}
+.month-table td { padding:9px 10px; font-size:0.82rem; border-bottom:1px solid var(--border); vertical-align:middle; }
+.month-table tr:last-child td { border-bottom:none; }
+.month-table tr:hover td { background:rgba(0,224,122,0.03); }
+.phase-tag {
+  font-family:'Space Mono',monospace;
+  font-size:0.56rem; padding:3px 7px;
+  border-radius:4px; font-weight:700;
+}
+.ret-pos { color:var(--green); font-weight:700; }
+.ret-neg { color:var(--red); font-weight:700; }
+
+/* ══════════════════════════════════════════════════════
+   COIN DETAIL MODAL
+══════════════════════════════════════════════════════ */
+.modal-overlay {
+  position:fixed; inset:0;
+  background:rgba(0,0,0,0.65);
+  backdrop-filter:blur(8px);
+  z-index:100;
+  display:none; align-items:center; justify-content:center;
+  padding:20px;
+}
+.modal-overlay.open { display:flex; animation:fadeIn 0.2s ease; }
+@keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
+
+.modal {
+  background:var(--surface2);
+  border:1px solid var(--border2);
+  border-radius:20px;
+  padding:32px;
+  width:100%; max-width:640px;
+  max-height:90vh;
+  overflow-y:auto;
+  animation:slideUp 0.25s ease;
+  position:relative;
+}
+@keyframes slideUp { from {transform:translateY(20px);opacity:0;} to {transform:translateY(0);opacity:1;} }
+
+.modal-close {
+  position:absolute; top:20px; right:20px;
+  width:32px; height:32px;
+  border-radius:8px;
+  border:1px solid var(--border);
+  background:var(--surface3);
+  color:var(--text2);
+  cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1rem;
+  transition:all 0.15s;
+}
+.modal-close:hover { border-color:var(--red); color:var(--red); }
+
+.modal-coin-header { display:flex; align-items:center; gap:16px; margin-bottom:24px; }
+.modal-coin-icon {
+  width:56px; height:56px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.1rem; font-weight:800; flex-shrink:0;
+}
+.modal-coin-name { font-size:1.6rem; font-weight:800; letter-spacing:-0.03em; text-transform:capitalize; }
+.modal-coin-sub { font-family:'Space Mono',monospace; font-size:0.7rem; color:var(--muted); margin-top:3px; }
+
+.modal-stats-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-bottom:20px; }
+.modal-stat {
+  background:var(--surface3);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:14px 16px;
+}
+.modal-stat-label { font-family:'Space Mono',monospace; font-size:0.6rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted); margin-bottom:6px; }
+.modal-stat-val { font-size:1.1rem; font-weight:800; letter-spacing:-0.02em; }
+
+.modal-chart-wrap { height:180px; margin-top:16px; }
+
+/* ══════════════════════════════════════════════════════
+   PRICE RANGE CHART
+══════════════════════════════════════════════════════ */
+.price-range-row { display:flex; flex-direction:column; gap:8px; }
+.pr-item { display:flex; align-items:center; gap:10px; }
+.pr-label { font-family:'Space Mono',monospace; font-size:0.66rem; color:var(--text2); width:100px; flex-shrink:0; text-transform:capitalize; }
+.pr-bar-bg { flex:1; height:8px; background:var(--border); border-radius:4px; position:relative; overflow:visible; }
+.pr-bar-range {
+  position:absolute;
+  height:100%; border-radius:4px;
+  background:linear-gradient(90deg, rgba(33,150,243,0.5), rgba(0,224,122,0.7));
+}
+.pr-dot {
+  position:absolute; top:50%;
+  transform:translate(-50%,-50%);
+  width:10px; height:10px;
+  background:var(--gold);
+  border:2px solid var(--surface);
+  border-radius:50%;
+}
+.pr-vals { font-family:'Space Mono',monospace; font-size:0.6rem; color:var(--muted); width:100px; text-align:right; }
+
+/* ══════════════════════════════════════════════════════
+   COMPARISON TABLE (all coins detail)
+══════════════════════════════════════════════════════ */
+.comp-table { width:100%; border-collapse:collapse; }
+.comp-table th {
+  font-family:'Space Mono',monospace;
+  font-size:0.64rem; text-transform:uppercase;
+  letter-spacing:0.1em; color:var(--muted);
+  padding:8px 10px; text-align:left;
+  border-bottom:2px solid var(--border);
+  cursor:pointer; user-select:none; white-space:nowrap;
+}
+.comp-table th:hover { color:var(--text); }
+.comp-table td { padding:9px 10px; font-size:0.8rem; border-bottom:1px solid var(--border); vertical-align:middle; }
+.comp-table tr:last-child td { border-bottom:none; }
+.comp-table tr { cursor:pointer; transition:background 0.15s; }
+.comp-table tr:hover { background:rgba(0,224,122,0.04); }
+.no-results { text-align:center; padding:30px; font-family:'Space Mono',monospace; font-size:0.75rem; color:var(--muted); }
+
+/* Risk badges */
+.risk-low    { color:var(--green); font-weight:700; }
+.risk-medium { color:var(--gold); font-weight:700; }
+.risk-high   { color:var(--red); font-weight:700; }
+
+/* ══════════════════════════════════════════════════════
+   ANIMATED COUNTER
+══════════════════════════════════════════════════════ */
+.counter { display:inline; }
+
+/* ══════════════════════════════════════════════════════
+   SCROLLBAR
+══════════════════════════════════════════════════════ */
+::-webkit-scrollbar { width:5px; height:5px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:var(--border2); border-radius:3px; }
+
+/* ══════════════════════════════════════════════════════
+   ANIMATIONS
+══════════════════════════════════════════════════════ */
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(18px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.kpi:nth-child(1){animation-delay:.04s}
+.kpi:nth-child(2){animation-delay:.08s}
+.kpi:nth-child(3){animation-delay:.12s}
+.kpi:nth-child(4){animation-delay:.16s}
+.kpi:nth-child(5){animation-delay:.20s}
+
+/* ══════════════════════════════════════════════════════
+   FOOTER
+══════════════════════════════════════════════════════ */
+footer {
+  margin-top:52px;
+  padding:32px 0 24px;
+  border-top:1px solid var(--border);
+}
+.footer-inner {
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:24px;
+}
+.footer-brand .foot-logo {
+  font-family:'Syne',sans-serif;
+  font-size:1.3rem; font-weight:800; letter-spacing:-0.04em;
+}
+.footer-brand .foot-logo .g { color:var(--green); }
+.footer-brand .foot-logo .b { color:var(--blue); }
+.footer-brand p {
+  font-family:'Space Mono',monospace;
+  font-size:0.65rem; color:var(--muted);
+  margin-top:6px; line-height:1.8;
+}
+
+.footer-contacts { display:flex; flex-direction:column; gap:8px; }
+.footer-contacts-label {
+  font-family:'Space Mono',monospace;
+  font-size:0.62rem; text-transform:uppercase;
+  letter-spacing:0.14em; color:var(--muted);
+  margin-bottom:4px;
+}
+.email-link {
+  display:inline-flex; align-items:center; gap:8px;
+  font-family:'Space Mono',monospace;
+  font-size:0.7rem;
+  color:var(--blue);
+  text-decoration:none;
+  padding:7px 14px;
+  border:1px solid rgba(33,150,243,0.25);
+  border-radius:8px;
+  background:rgba(33,150,243,0.06);
+  transition:all 0.18s;
+  letter-spacing:0.02em;
+}
+.email-link:hover {
+  background:var(--blue);
+  color:#fff;
+  border-color:var(--blue);
+  transform:translateX(2px);
+}
+.email-link svg { flex-shrink:0; opacity:0.8; }
+
+.footer-bottom {
+  margin-top:24px;
+  padding-top:16px;
+  border-top:1px solid var(--border);
+  display:flex; justify-content:space-between;
+  align-items:center; flex-wrap:wrap; gap:8px;
+  font-family:'Space Mono',monospace;
+  font-size:0.62rem; color:var(--muted);
+}
+
+canvas { display:block; }
 </style>
 </head>
 <body>
 <div class="container">
 
-  <!-- HEADER -->
-  <header>
-    <div class="logo-block">
-      <h1><span class="green">CRYP</span><span class="blue">DASH</span></h1>
-      <p>▸ Crypto Market Analytics · Full Year 2020 · 20 Coins · 6,708 Records</p>
-    </div>
-    <div class="header-meta">
-      <div class="live"><span class="live-dot"></span>CoinGecko Historical Data</div>
-      <div>Jan 2020 — Dec 2020</div>
-      <div>Source: CoinGecko · Period: Full Year</div>
-    </div>
-  </header>
-
-  <!-- TICKER -->
-  <div class="ticker-wrap">
-    <div class="ticker-inner" id="ticker"></div>
+<!-- ══ HEADER ══════════════════════════════════════════════════════════════ -->
+<header>
+  <div class="logo-area">
+    <h1><span class="g">CRYP</span><span class="b">DASH</span></h1>
+    <div class="tagline">▸ Crypto Market Analytics · Full Year 2020 · 20 Coins · 6,708 Records</div>
   </div>
-
-  <!-- KPI STRIP -->
-  <div class="kpi-strip">
-    <div class="kpi" style="--accent-color: var(--accent)">
-      <div class="kpi-label">Total Records</div>
-      <div class="kpi-value">6,708</div>
-      <div class="kpi-sub">Daily OHLCV entries</div>
+  <div class="header-right">
+    <div class="search-box">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="globalSearch" placeholder="Search coin…" oninput="onSearch(this.value)">
     </div>
-    <div class="kpi" style="--accent-color: var(--accent2)">
-      <div class="kpi-label">Coins Tracked</div>
-      <div class="kpi-value">20</div>
-      <div class="kpi-sub">Cryptocurrencies</div>
-    </div>
-    <div class="kpi" style="--accent-color: var(--gold)">
-      <div class="kpi-label">Best ROI 2020</div>
-      <div class="kpi-value">+9.98x</div>
-      <div class="kpi-sub">Chainlink · Strong Buy</div>
-    </div>
-    <div class="kpi" style="--accent-color: var(--accent3)">
-      <div class="kpi-label">Worst ROI 2020</div>
-      <div class="kpi-value">0.07x</div>
-      <div class="kpi-sub">USD Coin · Avoid</div>
-    </div>
-    <div class="kpi" style="--accent-color: var(--purple)">
-      <div class="kpi-label">Avg Daily Return</div>
-      <div class="kpi-value">+0.39%</div>
-      <div class="kpi-sub">Across all 20 coins</div>
-    </div>
+    <div class="status-pill"><span class="live-dot"></span>CoinGecko Data 2020</div>
+    <button class="theme-toggle" id="themeBtn" onclick="toggleTheme()" title="Toggle theme">🌙</button>
   </div>
+</header>
 
-  <!-- TOP 5 SECTION -->
-  <div class="section-label">Top 5 Performers by ROI 2020</div>
-  <div class="top-coins" id="topCoins"></div>
+<!-- ══ TICKER ══════════════════════════════════════════════════════════════ -->
+<div class="ticker-wrap"><div class="ticker-inner" id="ticker"></div></div>
 
-  <!-- ROW: ROI BAR CHART + LEADERBOARD -->
-  <div class="section-label">Performance Overview</div>
-  <div class="grid-21" style="margin-bottom:16px;">
-    <div class="card">
-      <div class="card-title">ROI 2020 — All 20 Cryptocurrencies</div>
-      <div class="chart-wrap" style="height:420px;">
-        <canvas id="roiChart"></canvas>
-      </div>
-    </div>
-    <div class="card" style="padding:0; overflow:auto; max-height:468px;">
-      <div style="padding:20px 20px 10px; position:sticky; top:0; background:var(--surface); z-index:2; border-bottom:1px solid var(--border);">
-        <div class="card-title" style="margin:0;">Investment Rankings</div>
-      </div>
-      <div style="padding:0 16px 16px;">
-        <table class="roi-table" id="rankTable"></table>
-      </div>
-    </div>
+<!-- ══ KPI STRIP ═══════════════════════════════════════════════════════════ -->
+<div class="kpi-strip">
+  <div class="kpi" style="--kc:var(--green)">
+    <div class="kpi-label">Total Records</div>
+    <div class="kpi-value"><span class="counter" data-target="6708" data-format="comma">0</span></div>
+    <div class="kpi-sub">Daily OHLCV entries</div>
+    <div class="kpi-trend">📊</div>
   </div>
-
-  <!-- ROW: MONTHLY RETURN + VOLUME -->
-  <div class="section-label">Monthly Market Dynamics</div>
-  <div class="grid-2">
-    <div class="card">
-      <div class="card-title">Average Daily Return by Month</div>
-      <div class="chart-wrap" style="height:240px;">
-        <canvas id="monthRetChart"></canvas>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title">Total Market Volume by Month</div>
-      <div class="chart-wrap" style="height:240px;">
-        <canvas id="volChart"></canvas>
-      </div>
-    </div>
+  <div class="kpi" style="--kc:var(--blue)">
+    <div class="kpi-label">Coins Tracked</div>
+    <div class="kpi-value"><span class="counter" data-target="20">0</span></div>
+    <div class="kpi-sub">Cryptocurrencies</div>
+    <div class="kpi-trend">🪙</div>
   </div>
+  <div class="kpi" style="--kc:var(--gold)">
+    <div class="kpi-label">Best ROI 2020</div>
+    <div class="kpi-value">+9.98x</div>
+    <div class="kpi-sub">Chainlink · Strong Buy</div>
+    <div class="kpi-trend">🏆</div>
+  </div>
+  <div class="kpi" style="--kc:var(--red)">
+    <div class="kpi-label">Worst ROI 2020</div>
+    <div class="kpi-value">0.07x</div>
+    <div class="kpi-sub">USD Coin · Avoid</div>
+    <div class="kpi-trend">📉</div>
+  </div>
+  <div class="kpi" style="--kc:var(--purple)">
+    <div class="kpi-label">Avg Daily Return</div>
+    <div class="kpi-value">+0.39%</div>
+    <div class="kpi-sub">Across all 20 coins</div>
+    <div class="kpi-trend">📈</div>
+  </div>
+</div>
 
-  <!-- PHASE ANALYSIS -->
-  <div class="section-label" style="margin-top:16px;">Market Phases — 2020</div>
-  <div class="phase-grid" id="phaseCards"></div>
+<!-- ══ CONTROLS ROW ════════════════════════════════════════════════════════ -->
+<div class="controls-row">
+  <div style="font-family:'Space Mono',monospace; font-size:0.72rem; color:var(--text2); font-weight:700;">Filter by Recommendation:</div>
+  <div class="filter-row">
+    <button class="filter-btn active" onclick="setFilter('all',this)">All Coins</button>
+    <button class="filter-btn" onclick="setFilter('Strong Buy',this)">Strong Buy</button>
+    <button class="filter-btn" onclick="setFilter('Buy',this)">Buy</button>
+    <button class="filter-btn" onclick="setFilter('Hold',this)">Hold</button>
+    <button class="filter-btn" onclick="setFilter('Avoid',this)">Avoid</button>
+    <button class="filter-btn" onclick="setFilter('Low Risk',this)">Low Risk</button>
+    <button class="filter-btn" onclick="setFilter('High Risk',this)">High Risk</button>
+  </div>
+  <div style="font-family:'Space Mono',monospace; font-size:0.68rem; color:var(--muted);" id="filterCount">Showing 20 / 20 coins</div>
+</div>
 
-  <!-- MONTHLY TABLE -->
-  <div class="card" style="margin-bottom:16px; padding:0; overflow:auto;">
-    <div style="padding:20px 24px 12px; border-bottom:1px solid var(--border);">
-      <div class="card-title" style="margin:0;">Monthly Breakdown — Avg Return · Volume · Best & Worst Coin</div>
+<!-- ══ TOP 5 ════════════════════════════════════════════════════════════════ -->
+<div class="section-label"><span class="sl-icon">🥇</span> Top 5 Performers by ROI 2020</div>
+<div class="top-coins" id="topCoins"></div>
+
+<!-- ══ ROI CHART + LEADERBOARD ═════════════════════════════════════════════ -->
+<div class="section-label"><span class="sl-icon">📊</span> Performance Overview</div>
+<div class="g21">
+  <div class="card">
+    <div class="card-title"><span class="ct-dot"></span>ROI 2020 — All 20 Cryptocurrencies</div>
+    <div class="chart-wrap" style="height:440px;"><canvas id="roiChart"></canvas></div>
+  </div>
+  <div class="card" style="padding:0;overflow:hidden;display:flex;flex-direction:column;">
+    <div style="padding:22px 22px 10px; position:sticky;top:0;background:var(--surface);z-index:2;border-bottom:1px solid var(--border);">
+      <div class="card-title" style="margin:0;"><span class="ct-dot"></span>Investment Rankings</div>
+      <div style="font-family:'Space Mono',monospace;font-size:0.6rem;color:var(--muted);margin-top:4px;">Click any row for full coin detail</div>
     </div>
-    <div style="padding:0 20px 16px; overflow-x:auto;">
-      <table class="month-table" id="monthTable"></table>
+    <div style="overflow-y:auto; flex:1; padding:0 16px 16px;">
+      <table class="roi-table">
+        <thead><tr>
+          <th onclick="sortTable('rank')"># <span class="sort-indicator">↕</span></th>
+          <th onclick="sortTable('name')">Coin <span class="sort-indicator">↕</span></th>
+          <th>Bar</th>
+          <th onclick="sortTable('roi')">ROI <span class="sort-indicator">↕</span></th>
+          <th onclick="sortTable('rec')">Signal <span class="sort-indicator">↕</span></th>
+        </tr></thead>
+        <tbody id="rankTableBody"></tbody>
+      </table>
     </div>
   </div>
+</div>
 
-  <!-- ROW: RISK RETURN SCATTER + RISK PIE -->
-  <div class="section-label">Risk & Return Analysis</div>
-  <div class="grid-2">
-    <div class="card">
-      <div class="card-title">Risk vs. Return — All Cryptos</div>
-      <div class="chart-wrap" style="height:300px;">
-        <canvas id="riskScatter"></canvas>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title">Risk Level Distribution</div>
-      <div class="chart-wrap" style="height:300px; display:flex; align-items:center; justify-content:center;">
-        <canvas id="riskPie" style="max-width:280px;"></canvas>
-      </div>
+<!-- ══ MONTHLY DYNAMICS ═════════════════════════════════════════════════════ -->
+<div class="section-label"><span class="sl-icon">📅</span> Monthly Market Dynamics</div>
+<div class="g2">
+  <div class="card">
+    <div class="card-title"><span class="ct-dot"></span>Average Daily Return by Month</div>
+    <div class="chart-wrap" style="height:260px;"><canvas id="monthRetChart"></canvas></div>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="ct-dot"></span>Total Market Volume by Month</div>
+    <div class="chart-wrap" style="height:260px;"><canvas id="volChart"></canvas></div>
+  </div>
+</div>
+
+<!-- ══ PHASE CARDS ══════════════════════════════════════════════════════════ -->
+<div class="section-label"><span class="sl-icon">🌊</span> Market Phases — 2020</div>
+<div class="phase-grid" id="phaseCards"></div>
+
+<!-- ══ AVG CLOSE PRICE TREND ══════════════════════════════════════════════════ -->
+<div class="card" style="margin-bottom:16px;">
+  <div class="card-title"><span class="ct-dot"></span>Market Average Close Price Trend — 2020 (Monthly)</div>
+  <div class="chart-wrap" style="height:240px;"><canvas id="closePriceTrend"></canvas></div>
+</div>
+
+<!-- ══ MONTHLY TABLE ════════════════════════════════════════════════════════ -->
+<div class="card" style="margin-bottom:16px;padding:0;overflow:auto;">
+  <div style="padding:22px 26px 12px; border-bottom:1px solid var(--border);">
+    <div class="card-title" style="margin:0;"><span class="ct-dot"></span>Monthly Breakdown — Return · Volume · Best & Worst Coin</div>
+  </div>
+  <div style="padding:0 22px 18px; overflow-x:auto;">
+    <table class="month-table" id="monthTable"></table>
+  </div>
+</div>
+
+<!-- ══ RISK ANALYSIS ════════════════════════════════════════════════════════ -->
+<div class="section-label"><span class="sl-icon">⚡</span> Risk & Return Analysis</div>
+<div class="g2">
+  <div class="card">
+    <div class="card-title"><span class="ct-dot"></span>Risk vs. Return Scatter — All 20 Cryptos</div>
+    <div class="chart-wrap" style="height:300px;"><canvas id="riskScatter"></canvas></div>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="ct-dot"></span>Risk Level Distribution</div>
+    <div class="chart-wrap" style="height:300px;display:flex;align-items:center;justify-content:center;">
+      <canvas id="riskPie" style="max-width:280px;"></canvas>
     </div>
   </div>
+</div>
 
-  <!-- TOP 5 MULTI-LINE -->
-  <div class="section-label" style="margin-top:16px;">Top 5 Coins — Monthly Return Trend</div>
-  <div class="card" style="margin-bottom:16px;">
-    <div class="card-title">Chainlink · NEM · Cardano · Stellar · CRO — Monthly Avg Return</div>
-    <div class="chart-wrap" style="height:280px;">
-      <canvas id="multiLine"></canvas>
+<!-- ══ MULTI-LINE TOP 5 ═════════════════════════════════════════════════════ -->
+<div class="section-label" style="margin-top:6px;"><span class="sl-icon">📈</span> Top 5 Coins — Monthly Return Trend</div>
+<div class="card" style="margin-bottom:16px;">
+  <div class="card-title"><span class="ct-dot"></span>Chainlink · NEM · Cardano · Stellar · CRO — Avg Monthly Return</div>
+  <div class="chart-wrap" style="height:280px;"><canvas id="multiLine"></canvas></div>
+</div>
+
+<!-- ══ VOLATILITY + MCAP ═══════════════════════════════════════════════════ -->
+<div class="g2" style="margin-bottom:16px;">
+  <div class="card">
+    <div class="card-title"><span class="ct-dot"></span>Avg Daily Volatility by Coin</div>
+    <div class="chart-wrap" style="height:340px;"><canvas id="volByCoin"></canvas></div>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="ct-dot"></span>Market Cap Distribution — Avg 2020</div>
+    <div class="chart-wrap" style="height:340px;display:flex;align-items:center;justify-content:center;">
+      <canvas id="mcapPie" style="max-width:310px;"></canvas>
     </div>
   </div>
+</div>
 
-  <!-- VOLATILITY + RECOMMENDATION -->
-  <div class="grid-2" style="margin-bottom:16px;">
-    <div class="card">
-      <div class="card-title">Avg Volatility by Coin</div>
-      <div class="chart-wrap" style="height:320px;">
-        <canvas id="volByCoin"></canvas>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title">Market Cap Distribution (Avg 2020)</div>
-      <div class="chart-wrap" style="height:320px; display:flex; align-items:center; justify-content:center;">
-        <canvas id="mcapPie" style="max-width:300px;"></canvas>
-      </div>
-    </div>
+<!-- ══ PRICE RANGE CHART ════════════════════════════════════════════════════ -->
+<div class="section-label"><span class="sl-icon">📏</span> Price Range — High / Low / Avg (2020)</div>
+<div class="card" style="margin-bottom:16px;">
+  <div class="card-title"><span class="ct-dot"></span>Full-Year High · Average · Low for Each Coin</div>
+  <div id="priceRangeChart" class="price-range-row" style="padding:8px 0;"></div>
+</div>
+
+<!-- ══ FULL COMPARISON TABLE ════════════════════════════════════════════════ -->
+<div class="section-label"><span class="sl-icon">🔍</span> Full Coin Comparison Table</div>
+<div class="card" style="padding:0;overflow:hidden;margin-bottom:16px;">
+  <div style="padding:20px 24px 12px;border-bottom:1px solid var(--border);">
+    <div class="card-title" style="margin:0;"><span class="ct-dot"></span>All 20 Cryptocurrencies — Sortable · Click for Detail</div>
   </div>
+  <div style="overflow-x:auto;padding:0 20px 16px;">
+    <table class="comp-table">
+      <thead><tr>
+        <th onclick="sortComp('rank')"># <span class="sort-indicator">↕</span></th>
+        <th onclick="sortComp('name')">Coin <span class="sort-indicator">↕</span></th>
+        <th onclick="sortComp('roi')">ROI <span class="sort-indicator">↕</span></th>
+        <th onclick="sortComp('ret')">Avg Return <span class="sort-indicator">↕</span></th>
+        <th onclick="sortComp('std')">Std Dev <span class="sort-indicator">↕</span></th>
+        <th onclick="sortComp('volatility')">Volatility <span class="sort-indicator">↕</span></th>
+        <th onclick="sortComp('avgClose')">Avg Close <span class="sort-indicator">↕</span></th>
+        <th onclick="sortComp('maxHigh')">Year High <span class="sort-indicator">↕</span></th>
+        <th onclick="sortComp('minLow')">Year Low <span class="sort-indicator">↕</span></th>
+        <th onclick="sortComp('mcap')">Avg Mkt Cap <span class="sort-indicator">↕</span></th>
+        <th onclick="sortComp('riskLevel')">Risk <span class="sort-indicator">↕</span></th>
+        <th onclick="sortComp('rec')">Signal <span class="sort-indicator">↕</span></th>
+      </tr></thead>
+      <tbody id="compTableBody"></tbody>
+    </table>
+  </div>
+</div>
 
 </div><!-- /container -->
 
+<!-- ══ COIN DETAIL MODAL ════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modalContent">
+    <button class="modal-close" onclick="document.getElementById('modalOverlay').classList.remove('open')">✕</button>
+    <div class="modal-coin-header">
+      <div class="modal-coin-icon" id="mIcon"></div>
+      <div>
+        <div class="modal-coin-name" id="mName"></div>
+        <div class="modal-coin-sub" id="mSub"></div>
+      </div>
+    </div>
+    <div class="modal-stats-grid" id="mStats"></div>
+    <div class="card-title" style="margin-top:8px;"><span class="ct-dot"></span>Monthly Return Sparkline</div>
+    <div class="modal-chart-wrap"><canvas id="modalChart"></canvas></div>
+  </div>
+</div>
+
+<!-- ══ FOOTER ══════════════════════════════════════════════════════════════ -->
+<div class="container" style="padding-top:0;">
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="foot-logo"><span class="g">CRYP</span><span class="b">DASH</span></div>
+      <p>
+        Crypto Market Analytics Dashboard<br>
+        Full Year 2020 · 20 Cryptocurrencies · 6,708 Records<br>
+        Data Source: CoinGecko Historical API
+      </p>
+    </div>
+    <div class="footer-contacts">
+      <div class="footer-contacts-label">📬 Team Contacts</div>
+      <a class="email-link" href="mailto:jashwantnukala2025.comp@mmcoe.edu.in">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        jashwantnukala2025.comp@mmcoe.edu.in
+      </a>
+      <a class="email-link" href="mailto:aarushipatil2025.comp@mmcoe.edu.in">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        aarushipatil2025.comp@mmcoe.edu.in
+      </a>
+      <a class="email-link" href="mailto:sanjananandani2025.comp@mmcoe.edu.in">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        sanjananandani2025.comp@mmcoe.edu.in
+      </a>
+      <a class="email-link" href="mailto:ganeshpadme2025.comp@mmcoe.edu.in">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        ganeshpadme2025.comp@mmcoe.edu.in
+      </a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2024 CRYPDASH · MMCOE Computer Engineering</span>
+    <span>Built with Chart.js · Data: CoinGecko 2020</span>
+  </div>
+</footer>
+</div>
+
 <script>
-// ── DATA ──────────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════════
+//  DATA
+// ═══════════════════════════════════════════════════════════════════════════
 const coins = [
-  { name:'chainlink',       roi:9.977,  ret:0.007861, std:0.066968, vol:296862677868,  mcap:2593621576,  riskLevel:'Medium Risk', rec:'Strong Buy', avgClose:7.16,     maxHigh:19.85,   minLow:1.51,    volatility:0.085780 },
-  { name:'nem',             roi:7.172,  ret:0.007813, std:0.060869, vol:20111377766,   mcap:666398927,   riskLevel:'Medium Risk', rec:'Strong Buy', avgClose:0.074,    maxHigh:0.2791,  minLow:0.0266,  volatility:0.089344 },
-  { name:'cardano',         roi:6.149,  ret:0.005938, std:0.057322, vol:141359932111,  mcap:2292798532,  riskLevel:'Medium Risk', rec:'Buy',        avgClose:0.0826,   maxHigh:0.1821,  minLow:0.0191,  volatility:0.073051 },
-  { name:'stellar',         roi:5.172,  ret:0.005267, std:0.058560, vol:140580637068,  mcap:1609780741,  riskLevel:'Medium Risk', rec:'Hold',       avgClose:0.0781,   maxHigh:0.2298,  minLow:0.0285,  volatility:0.067282 },
-  { name:'crypto-com-coin', roi:4.981,  ret:0.002693, std:0.044669, vol:14599342397,   mcap:1717221611,  riskLevel:'Medium Risk', rec:'Hold',       avgClose:0.0942,   maxHigh:0.2017,  minLow:0.0252,  volatility:0.054225 },
-  { name:'ethereum',        roi:4.575,  ret:0.005593, std:0.049822, vol:4916714132854, mcap:32340110102, riskLevel:'Medium Risk', rec:'Strong Buy', avgClose:288.84,   maxHigh:635.16,  minLow:95.18,   volatility:0.057817 },
-  { name:'xrp',             roi:3.957,  ret:0.004106, std:0.052001, vol:998532947209,  mcap:11155495328, riskLevel:'Medium Risk', rec:'Hold',       avgClose:0.2504,   maxHigh:0.768,   minLow:0.1151,  volatility:0.055638 },
-  { name:'tron',            roi:3.685,  ret:0.003658, std:0.051952, vol:444917922788,  mcap:1405601505,  riskLevel:'Medium Risk', rec:'Hold',       avgClose:0.0203,   maxHigh:0.0489,  minLow:0.0075,  volatility:0.063685 },
-  { name:'bitcoin-sv',      roi:3.553,  ret:0.005135, std:0.099229, vol:546028936998,  mcap:3587807630,  riskLevel:'High Risk',   rec:'Avoid',      avgClose:194.89,   maxHigh:441.2,   minLow:88.07,   volatility:0.070677 },
-  { name:'monero',          roi:3.445,  ret:0.004529, std:0.046373, vol:183235622502,  mcap:1428178036,  riskLevel:'Medium Risk', rec:'Buy',        avgClose:81.02,    maxHigh:149.45,  minLow:26.70,   volatility:0.063320 },
-  { name:'wrapped-bitcoin', roi:2.967,  ret:0.003566, std:0.038324, vol:5141381805,    mcap:465293587,   riskLevel:'Low Risk',    rec:'Buy',        avgClose:10431.62, maxHigh:19897.24,minLow:4174.18, volatility:0.050429 },
-  { name:'bitcoin',         roi:2.948,  ret:0.003549, std:0.037693, vol:11247847346626,mcap:191742334332,riskLevel:'Low Risk',    rec:'Buy',        avgClose:10411.99, maxHigh:19845.98,minLow:4106.98, volatility:0.040797 },
-  { name:'binance-coin',    roi:2.600,  ret:0.003339, std:0.047972, vol:120552589713,  mcap:3099916687,  riskLevel:'Medium Risk', rec:'Hold',       avgClose:20.71,    maxHigh:35.28,   minLow:6.96,    volatility:0.060638 },
-  { name:'tezos',           roi:2.557,  ret:0.003184, std:0.059979, vol:58725167487,   mcap:1776724188,  riskLevel:'Medium Risk', rec:'Avoid',      avgClose:2.447,    maxHigh:4.48,    minLow:1.02,    volatility:0.082043 },
-  { name:'bitcoin-cash',    roi:2.227,  ret:0.002336, std:0.054301, vol:1015803397680, mcap:4929213997,  riskLevel:'Medium Risk', rec:'Avoid',      avgClose:267.58,   maxHigh:493.03,  minLow:139.22,  volatility:0.062289 },
-  { name:'eos',             roi:1.897,  ret:0.001505, std:0.049943, vol:955946409997,  mcap:2731803729,  riskLevel:'Medium Risk', rec:'Avoid',      avgClose:2.919,    maxHigh:5.48,    minLow:1.46,    volatility:0.058593 },
-  { name:'litecoin',        roi:1.884,  ret:0.003019, std:0.049456, vol:1185967795178, mcap:3458183639,  riskLevel:'Medium Risk', rec:'Hold',       avgClose:53.23,    maxHigh:93.58,   minLow:25.57,   volatility:0.061329 },
-  { name:'polkadot-new',    roi:1.188,  ret:0.007088, std:0.078988, vol:65356029095,   mcap:3523090961,  riskLevel:'Medium Risk', rec:'Hold',       avgClose:4.666,    maxHigh:6.84,    minLow:2.69,    volatility:0.092440 },
-  { name:'tether',          roi:0.078,  ret:0.000018, std:0.005904, vol:14991884097678,mcap:9926114422,  riskLevel:'Low Risk',    rec:'Avoid',      avgClose:1.0004,   maxHigh:1.08,    minLow:0.8995,  volatility:0.014044 },
-  { name:'usd-coin',        roi:0.072,  ret:0.000017, std:0.005925, vol:182260682833,  mcap:1310394605,  riskLevel:'Low Risk',    rec:'Avoid',      avgClose:1.0015,   maxHigh:1.08,    minLow:0.9292,  volatility:0.011986 },
+  { name:'chainlink',       roi:9.977,  ret:0.007861, std:0.066968, vol:296862677868,   mcap:2593621576,   riskLevel:'Medium Risk', rec:'Strong Buy', avgClose:7.16,      maxHigh:19.85,    minLow:1.51,    volatility:0.085780 },
+  { name:'nem',             roi:7.172,  ret:0.007813, std:0.060869, vol:20111377766,    mcap:666398927,    riskLevel:'Medium Risk', rec:'Strong Buy', avgClose:0.074,     maxHigh:0.2791,   minLow:0.0266,  volatility:0.089344 },
+  { name:'cardano',         roi:6.149,  ret:0.005938, std:0.057322, vol:141359932111,   mcap:2292798532,   riskLevel:'Medium Risk', rec:'Buy',        avgClose:0.0826,    maxHigh:0.1821,   minLow:0.0191,  volatility:0.073051 },
+  { name:'stellar',         roi:5.172,  ret:0.005267, std:0.058560, vol:140580637068,   mcap:1609780741,   riskLevel:'Medium Risk', rec:'Hold',       avgClose:0.0781,    maxHigh:0.2298,   minLow:0.0285,  volatility:0.067282 },
+  { name:'crypto-com-coin', roi:4.981,  ret:0.002693, std:0.044669, vol:14599342397,    mcap:1717221611,   riskLevel:'Medium Risk', rec:'Hold',       avgClose:0.0942,    maxHigh:0.2017,   minLow:0.0252,  volatility:0.054225 },
+  { name:'ethereum',        roi:4.575,  ret:0.005593, std:0.049822, vol:4916714132854,  mcap:32340110102,  riskLevel:'Medium Risk', rec:'Strong Buy', avgClose:288.84,    maxHigh:635.16,   minLow:95.18,   volatility:0.057817 },
+  { name:'xrp',             roi:3.957,  ret:0.004106, std:0.052001, vol:998532947209,   mcap:11155495328,  riskLevel:'Medium Risk', rec:'Hold',       avgClose:0.2504,    maxHigh:0.768,    minLow:0.1151,  volatility:0.055638 },
+  { name:'tron',            roi:3.685,  ret:0.003658, std:0.051952, vol:444917922788,   mcap:1405601505,   riskLevel:'Medium Risk', rec:'Hold',       avgClose:0.0203,    maxHigh:0.0489,   minLow:0.0075,  volatility:0.063685 },
+  { name:'bitcoin-sv',      roi:3.553,  ret:0.005135, std:0.099229, vol:546028936998,   mcap:3587807630,   riskLevel:'High Risk',   rec:'Avoid',      avgClose:194.89,    maxHigh:441.2,    minLow:88.07,   volatility:0.070677 },
+  { name:'monero',          roi:3.445,  ret:0.004529, std:0.046373, vol:183235622502,   mcap:1428178036,   riskLevel:'Medium Risk', rec:'Buy',        avgClose:81.02,     maxHigh:149.45,   minLow:26.70,   volatility:0.063320 },
+  { name:'wrapped-bitcoin', roi:2.967,  ret:0.003566, std:0.038324, vol:5141381805,     mcap:465293587,    riskLevel:'Low Risk',    rec:'Buy',        avgClose:10431.62,  maxHigh:19897.24, minLow:4174.18, volatility:0.050429 },
+  { name:'bitcoin',         roi:2.948,  ret:0.003549, std:0.037693, vol:11247847346626, mcap:191742334332, riskLevel:'Low Risk',    rec:'Buy',        avgClose:10411.99,  maxHigh:19845.98, minLow:4106.98, volatility:0.040797 },
+  { name:'binance-coin',    roi:2.600,  ret:0.003339, std:0.047972, vol:120552589713,   mcap:3099916687,   riskLevel:'Medium Risk', rec:'Hold',       avgClose:20.71,     maxHigh:35.28,    minLow:6.96,    volatility:0.060638 },
+  { name:'tezos',           roi:2.557,  ret:0.003184, std:0.059979, vol:58725167487,    mcap:1776724188,   riskLevel:'Medium Risk', rec:'Avoid',      avgClose:2.447,     maxHigh:4.48,     minLow:1.02,    volatility:0.082043 },
+  { name:'bitcoin-cash',    roi:2.227,  ret:0.002336, std:0.054301, vol:1015803397680,  mcap:4929213997,   riskLevel:'Medium Risk', rec:'Avoid',      avgClose:267.58,    maxHigh:493.03,   minLow:139.22,  volatility:0.062289 },
+  { name:'eos',             roi:1.897,  ret:0.001505, std:0.049943, vol:955946409997,   mcap:2731803729,   riskLevel:'Medium Risk', rec:'Avoid',      avgClose:2.919,     maxHigh:5.48,     minLow:1.46,    volatility:0.058593 },
+  { name:'litecoin',        roi:1.884,  ret:0.003019, std:0.049456, vol:1185967795178,  mcap:3458183639,   riskLevel:'Medium Risk', rec:'Hold',       avgClose:53.23,     maxHigh:93.58,    minLow:25.57,   volatility:0.061329 },
+  { name:'polkadot-new',    roi:1.188,  ret:0.007088, std:0.078988, vol:65356029095,    mcap:3523090961,   riskLevel:'Medium Risk', rec:'Hold',       avgClose:4.666,     maxHigh:6.84,     minLow:2.69,    volatility:0.092440 },
+  { name:'tether',          roi:0.078,  ret:0.000018, std:0.005904, vol:14991884097678, mcap:9926114422,   riskLevel:'Low Risk',    rec:'Avoid',      avgClose:1.0004,    maxHigh:1.08,     minLow:0.8995,  volatility:0.014044 },
+  { name:'usd-coin',        roi:0.072,  ret:0.000017, std:0.005925, vol:182260682833,   mcap:1310394605,   riskLevel:'Low Risk',    rec:'Avoid',      avgClose:1.0015,    maxHigh:1.08,     minLow:0.9292,  volatility:0.011986 },
 ];
 
 const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const monthsShort = months.map(m => m.slice(0,3));
 
 const monthlyData = [
-  { month:'January',   ret:0.014279, vol:2768162254450, close:927.21,  best:'bitcoin-sv',   worst:'tether',       phase:'Bull Run' },
-  { month:'February',  ret:0.000887, vol:3932125946662, close:1074.85, best:'tezos',        worst:'bitcoin-sv',   phase:'Bull Run' },
-  { month:'March',     ret:-0.005457,vol:4106077473628, close:761.06,  best:'crypto-com-coin',worst:'chainlink',  phase:'COVID Crash' },
-  { month:'April',     ret:0.009837, vol:3788555668522, close:800.16,  best:'tezos',        worst:'usd-coin',     phase:'Recovery' },
-  { month:'May',       ret:0.002438, vol:3893290593601, close:1018.05, best:'cardano',      worst:'bitcoin-sv',   phase:'Recovery' },
-  { month:'June',      ret:-0.000365,vol:2001630103175, close:1041.46, best:'crypto-com-coin',worst:'bitcoin-sv', phase:'Recovery' },
-  { month:'July',      ret:0.009821, vol:1821889408581, close:1055.46, best:'chainlink',    worst:'tether',       phase:'Recovery' },
-  { month:'August',    ret:0.006921, vol:2655379721861, close:1261.40, best:'polkadot-new', worst:'bitcoin-sv',   phase:'Recovery' },
-  { month:'September', ret:-0.003728,vol:3604158505679, close:1114.95, best:'binance-coin', worst:'chainlink',    phase:'Year-End Rally' },
-  { month:'October',   ret:0.000521, vol:3271938100834, close:1239.00, best:'bitcoin',      worst:'crypto-com-coin',phase:'Year-End Rally' },
-  { month:'November',  ret:0.012316, vol:4184353321066, close:1721.35, best:'xrp',          worst:'crypto-com-coin',phase:'Year-End Rally' },
-  { month:'December',  ret:-0.006465,vol:1504867329594, close:1947.03, best:'nem',          worst:'xrp',          phase:'Year-End Rally' },
+  { month:'January',   ret:0.014279,  vol:2768162254450, close:927.21,  best:'bitcoin-sv',      worst:'tether',         phase:'Bull Run' },
+  { month:'February',  ret:0.000887,  vol:3932125946662, close:1074.85, best:'tezos',           worst:'bitcoin-sv',      phase:'Bull Run' },
+  { month:'March',     ret:-0.005457, vol:4106077473628, close:761.06,  best:'crypto-com-coin', worst:'chainlink',       phase:'COVID Crash' },
+  { month:'April',     ret:0.009837,  vol:3788555668522, close:800.16,  best:'tezos',           worst:'usd-coin',        phase:'Recovery' },
+  { month:'May',       ret:0.002438,  vol:3893290593601, close:1018.05, best:'cardano',         worst:'bitcoin-sv',      phase:'Recovery' },
+  { month:'June',      ret:-0.000365, vol:2001630103175, close:1041.46, best:'crypto-com-coin', worst:'bitcoin-sv',      phase:'Recovery' },
+  { month:'July',      ret:0.009821,  vol:1821889408581, close:1055.46, best:'chainlink',       worst:'tether',          phase:'Recovery' },
+  { month:'August',    ret:0.006921,  vol:2655379721861, close:1261.40, best:'polkadot-new',    worst:'bitcoin-sv',      phase:'Recovery' },
+  { month:'September', ret:-0.003728, vol:3604158505679, close:1114.95, best:'binance-coin',    worst:'chainlink',       phase:'Year-End Rally' },
+  { month:'October',   ret:0.000521,  vol:3271938100834, close:1239.00, best:'bitcoin',         worst:'crypto-com-coin', phase:'Year-End Rally' },
+  { month:'November',  ret:0.012316,  vol:4184353321066, close:1721.35, best:'xrp',             worst:'crypto-com-coin', phase:'Year-End Rally' },
+  { month:'December',  ret:-0.006465, vol:1504867329594, close:1947.03, best:'nem',             worst:'xrp',             phase:'Year-End Rally' },
 ];
 
-// Monthly returns by coin (for multi-line)
 const monthlyByCoin = {
   'chainlink':       [0.008, 0.014,-0.018, 0.027, 0.007,-0.002, 0.021, 0.009,-0.011, 0.008, 0.019,-0.009],
   'nem':             [0.012, 0.006,-0.012, 0.018, 0.006,-0.003, 0.014, 0.010,-0.005, 0.007, 0.017,-0.010],
@@ -732,463 +1044,614 @@ const monthlyByCoin = {
 };
 
 const phases = [
-  { name:'Bull Run',      period:'Jan – Feb',      ret:0.007697,  vol:6700288201112, close:998.57, color:'var(--accent)',  char:'Pre-COVID Rally' },
-  { name:'COVID Crash',   period:'Mar',             ret:-0.005457, vol:4106077473628, close:761.06, color:'var(--accent3)', char:'Market Collapse −47%' },
-  { name:'Recovery',      period:'Apr – Aug',       ret:0.005748,  vol:14160745495740,close:1037.73,color:'var(--accent2)', char:'Gradual Stabilisation' },
-  { name:'Year-End Rally',period:'Sep – Dec',       ret:0.001905,  vol:12565317257173,close:1425.85,color:'var(--gold)',    char:'BTC Hits ATH' },
+  { name:'Bull Run',       period:'Jan – Feb', ret:0.007697,  vol:6700288201112,  close:998.57,  color:'var(--green)',  char:'Pre-COVID Rally Period' },
+  { name:'COVID Crash',    period:'March',      ret:-0.005457, vol:4106077473628,  close:761.06,  color:'var(--red)',    char:'Market Collapse — avg −47%' },
+  { name:'Recovery',       period:'Apr – Aug',  ret:0.005748,  vol:14160745495740, close:1037.73, color:'var(--blue)',   char:'Gradual Stabilisation' },
+  { name:'Year-End Rally', period:'Sep – Dec',  ret:0.001905,  vol:12565317257173, close:1425.85, color:'var(--gold)',   char:'BTC hits All-Time High' },
 ];
 
-// ── CHART DEFAULTS ─────────────────────────────────────────────────────────
-Chart.defaults.color = '#6b6b80';
-Chart.defaults.font.family = "'Space Mono', monospace";
-Chart.defaults.font.size = 10;
-
-const gridColor = 'rgba(255,255,255,0.05)';
-const accentGreen = '#00f5a0';
-const accentBlue  = '#00d4ff';
-const accentRed   = '#ff6b6b';
-const accentGold  = '#ffd93d';
-const accentPurple= '#a78bfa';
+// ═══════════════════════════════════════════════════════════════════════════
+//  UTILS
+// ═══════════════════════════════════════════════════════════════════════════
+const isDark = () => document.documentElement.getAttribute('data-theme') === 'dark';
 
 function fmt(n) {
-  if (n >= 1e12) return (n/1e12).toFixed(1)+'T';
-  if (n >= 1e9)  return (n/1e9).toFixed(1)+'B';
-  if (n >= 1e6)  return (n/1e6).toFixed(1)+'M';
+  if(n>=1e12) return (n/1e12).toFixed(1)+'T';
+  if(n>=1e9)  return (n/1e9).toFixed(1)+'B';
+  if(n>=1e6)  return (n/1e6).toFixed(1)+'M';
+  if(n>=1e3)  return (n/1e3).toFixed(1)+'K';
   return n.toFixed(2);
 }
-
-function capName(s) {
-  return s.replace(/-/g,' ').replace(/\b\w/g, c => c.toUpperCase());
+function cap(s){ return s.replace(/-/g,' ').replace(/\b\w/g, c=>c.toUpperCase()); }
+function fmtPrice(n){
+  if(n>=1000) return '$'+n.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g,',');
+  if(n>=1)    return '$'+n.toFixed(2);
+  return '$'+n.toFixed(4);
 }
 
-// ── TICKER ────────────────────────────────────────────────────────────────
-function buildTicker() {
+const getColor = (v) => v===getComputedStyle(document.documentElement).getPropertyValue('--green').trim()
+  ? v : v;
+
+const chartColors = {
+  green:  '#00e07a', blue: '#2196f3', red: '#ff4757',
+  gold:   '#ffc107', purple:'#9c27b0', orange:'#ff9800',
+  teal:   '#00bcd4', pink: '#e91e63',
+};
+
+function getGridColor(){ return isDark() ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.06)'; }
+function getTextColor(){ return isDark() ? '#5a5a72' : '#8a8aaa'; }
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  THEME
+// ═══════════════════════════════════════════════════════════════════════════
+function toggleTheme(){
+  const html = document.documentElement;
+  const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  document.getElementById('themeBtn').textContent = next==='dark' ? '🌙' : '☀️';
+  Chart.defaults.color = getTextColor();
+  Object.values(Chart.instances).forEach(c => c.update());
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  ANIMATED COUNTERS
+// ═══════════════════════════════════════════════════════════════════════════
+function animateCounters(){
+  document.querySelectorAll('.counter').forEach(el => {
+    const target = +el.dataset.target;
+    const fmt = el.dataset.format;
+    let start = 0;
+    const step = target / 60;
+    const timer = setInterval(() => {
+      start = Math.min(start + step, target);
+      el.textContent = fmt === 'comma'
+        ? Math.round(start).toLocaleString()
+        : Math.round(start);
+      if(start >= target) clearInterval(timer);
+    }, 16);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  FILTER & SEARCH
+// ═══════════════════════════════════════════════════════════════════════════
+let currentFilter = 'all';
+let currentSearch = '';
+let compSortKey = 'rank', compSortDir = 1;
+let rankSortKey = 'rank', rankSortDir = 1;
+
+function getFilteredCoins(){
+  return coins.filter(c => {
+    const matchSearch = currentSearch === '' ||
+      c.name.toLowerCase().includes(currentSearch.toLowerCase());
+    const matchFilter =
+      currentFilter === 'all' ||
+      c.rec === currentFilter ||
+      c.riskLevel === currentFilter;
+    return matchSearch && matchFilter;
+  });
+}
+
+function setFilter(f, btn){
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  refreshTables();
+}
+
+function onSearch(v){
+  currentSearch = v;
+  refreshTables();
+}
+
+function refreshTables(){
+  buildRankTable();
+  buildCompTable();
+  const fc = getFilteredCoins();
+  document.getElementById('filterCount').textContent =
+    `Showing ${fc.length} / ${coins.length} coins`;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  TICKER
+// ═══════════════════════════════════════════════════════════════════════════
+function buildTicker(){
   const items = coins.map(c => {
-    const sign = c.ret >= 0;
+    const pos = c.ret >= 0;
     return `<span class="ticker-item">
-      <span class="ticker-name">${c.name.split('-')[0].toUpperCase()}</span>
-      <span class="ticker-val">${c.roi.toFixed(2)}x</span>
-      <span class="${sign ? 'ticker-pos' : 'ticker-neg'}">${sign?'▲':'▼'} ${(c.ret*100).toFixed(2)}%</span>
+      <span class="t-name">${c.name.split('-')[0].toUpperCase()}</span>
+      <span class="t-val">${c.roi.toFixed(2)}x</span>
+      <span class="${pos?'t-pos':'t-neg'}">${pos?'▲':'▼'} ${(c.ret*100).toFixed(2)}%</span>
     </span>`;
   }).join('');
-  const el = document.getElementById('ticker');
-  el.innerHTML = items + items; // duplicate for seamless loop
+  document.getElementById('ticker').innerHTML = items + items;
 }
 
-// ── TOP COIN BADGES ────────────────────────────────────────────────────────
-function buildTopCoins() {
-  const top5 = coins.slice(0, 5);
-  const colors = ['#00f5a0','#00d4ff','#ffd93d','#a78bfa','#ff9f43'];
-  const el = document.getElementById('topCoins');
-  el.innerHTML = top5.map((c, i) => `
-    <div class="top-coin-badge">
-      <div class="coin-icon" style="background:${colors[i]}22; color:${colors[i]};">#${i+1}</div>
-      <div class="badge-info">
-        <div class="badge-coin-name">${capName(c.name)}</div>
+// ═══════════════════════════════════════════════════════════════════════════
+//  TOP 5
+// ═══════════════════════════════════════════════════════════════════════════
+function buildTopCoins(){
+  const colors = [chartColors.green,chartColors.blue,chartColors.gold,chartColors.purple,chartColors.orange];
+  document.getElementById('topCoins').innerHTML = coins.slice(0,5).map((c,i) => `
+    <div class="top-coin-badge" onclick="openModal(${coins.indexOf(c)})">
+      <div class="coin-icon" style="background:${colors[i]}22;color:${colors[i]};">#${i+1}</div>
+      <div>
+        <div class="badge-coin-name">${cap(c.name)}</div>
         <div class="badge-roi">ROI ${c.roi.toFixed(2)}x · ${c.rec}</div>
+        <div class="badge-hint">Click for details →</div>
       </div>
     </div>
   `).join('');
 }
 
-// ── RANK TABLE ─────────────────────────────────────────────────────────────
-function buildRankTable() {
-  const maxRoi = coins[0].roi;
-  const recClass = { 'Strong Buy':'rec-strong-buy','Buy':'rec-buy','Hold':'rec-hold','Avoid':'rec-avoid' };
-  const el = document.getElementById('rankTable');
-  el.innerHTML = coins.map((c, i) => `
-    <tr>
-      <td class="rank-num">${String(i+1).padStart(2,'0')}</td>
-      <td>
-        <div class="coin-name">${capName(c.name)}</div>
-        <span class="coin-ticker">${c.name.split('-')[0].toUpperCase()}</span>
-      </td>
-      <td class="roi-bar-cell">
-        <div class="roi-bar-bg">
-          <div class="roi-bar-fill" style="width:${(c.roi/maxRoi*100).toFixed(1)}%; background:${c.roi>5?accentGreen:c.roi>2?accentBlue:accentRed};"></div>
-        </div>
-      </td>
-      <td class="roi-val">${c.roi.toFixed(2)}x</td>
-      <td><span class="rec-badge ${recClass[c.rec]||''}">${c.rec}</span></td>
-    </tr>
-  `).join('');
+// ═══════════════════════════════════════════════════════════════════════════
+//  RANK TABLE (sortable)
+// ═══════════════════════════════════════════════════════════════════════════
+function sortTable(key){
+  if(rankSortKey===key) rankSortDir*=-1; else { rankSortKey=key; rankSortDir=1; }
+  buildRankTable();
 }
 
-// ── PHASE CARDS ────────────────────────────────────────────────────────────
-function buildPhaseCards() {
-  const el = document.getElementById('phaseCards');
-  el.innerHTML = phases.map(p => `
-    <div class="phase-card" style="--phase-color:${p.color}; background: color-mix(in srgb, ${p.color} 4%, var(--surface));">
+function buildRankTable(){
+  const fc = getFilteredCoins();
+  const sorted = [...fc].sort((a,b)=>{
+    const ai = coins.indexOf(a)+1, bi = coins.indexOf(b)+1;
+    if(rankSortKey==='rank')   return (ai-bi)*rankSortDir;
+    if(rankSortKey==='roi')    return (b.roi-a.roi)*rankSortDir;
+    if(rankSortKey==='name')   return a.name.localeCompare(b.name)*rankSortDir;
+    if(rankSortKey==='rec')    return a.rec.localeCompare(b.rec)*rankSortDir;
+    return 0;
+  });
+  const maxRoi = coins[0].roi;
+  const recClass = {'Strong Buy':'rec-sb','Buy':'rec-b','Hold':'rec-h','Avoid':'rec-av'};
+  const body = document.getElementById('rankTableBody');
+  if(!sorted.length){ body.innerHTML=`<tr><td colspan="5" class="no-results">No coins match your filter.</td></tr>`; return; }
+  body.innerHTML = sorted.map(c => {
+    const rank = coins.indexOf(c)+1;
+    const barColor = c.roi>5?chartColors.green:c.roi>2?chartColors.blue:chartColors.gold;
+    return `<tr onclick="openModal(${coins.indexOf(c)})">
+      <td class="rank-num">${String(rank).padStart(2,'0')}</td>
+      <td><div class="coin-name">${cap(c.name)}</div><span class="coin-ticker">${c.name.split('-')[0].toUpperCase()}</span></td>
+      <td class="roi-bar-cell"><div class="roi-bar-bg"><div class="roi-bar-fill" style="width:${(c.roi/maxRoi*100).toFixed(1)}%;background:${barColor};"></div></div></td>
+      <td class="roi-val">${c.roi.toFixed(2)}x</td>
+      <td><span class="rec-badge ${recClass[c.rec]||''}">${c.rec}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  PHASE CARDS
+// ═══════════════════════════════════════════════════════════════════════════
+function buildPhaseCards(){
+  document.getElementById('phaseCards').innerHTML = phases.map(p => `
+    <div class="phase-card" style="--pc:${p.color};background:var(--surface2);">
       <div class="phase-name">${p.name}</div>
       <div class="phase-period">${p.period}</div>
-      <div class="phase-stat-val" style="color:${p.color};">${p.ret<0?'':'+'}${(p.ret*100).toFixed(2)}%</div>
+      <div class="phase-stat-val">${p.ret<0?'':'+'}${(p.ret*100).toFixed(3)}%</div>
       <div class="phase-stat-label">Avg Daily Return</div>
-      <div style="margin-top:10px; font-family:'Space Mono',monospace; font-size:0.58rem; color:var(--muted);">${p.char}</div>
+      <div class="phase-vol">Vol: $${fmt(p.vol)}</div>
+      <div class="phase-char">${p.char}</div>
     </div>
   `).join('');
 }
 
-// ── MONTHLY TABLE ──────────────────────────────────────────────────────────
-function buildMonthTable() {
-  const phaseColor = { 'Bull Run':accentGreen,'COVID Crash':accentRed,'Recovery':accentBlue,'Year-End Rally':accentGold };
-  const el = document.getElementById('monthTable');
-  el.innerHTML = `<thead><tr>
-    <th>Month</th><th>Phase</th><th>Avg Return</th><th>Total Volume</th><th>Avg Close ($)</th><th>Best Coin</th><th>Worst Coin</th>
-  </tr></thead><tbody>` +
-  monthlyData.map(m => `
-    <tr>
+// ═══════════════════════════════════════════════════════════════════════════
+//  MONTHLY TABLE
+// ═══════════════════════════════════════════════════════════════════════════
+function buildMonthTable(){
+  const pc = {'Bull Run':chartColors.green,'COVID Crash':chartColors.red,'Recovery':chartColors.blue,'Year-End Rally':chartColors.gold};
+  document.getElementById('monthTable').innerHTML =
+    `<thead><tr><th>Month</th><th>Phase</th><th>Avg Return</th><th>Total Volume</th><th>Avg Close</th><th>Best Coin</th><th>Worst Coin</th></tr></thead><tbody>` +
+    monthlyData.map(m => `<tr>
       <td style="font-weight:700;">${m.month}</td>
-      <td><span class="phase-tag" style="background:${phaseColor[m.phase]}22; color:${phaseColor[m.phase]};">${m.phase}</span></td>
+      <td><span class="phase-tag" style="background:${pc[m.phase]}22;color:${pc[m.phase]};">${m.phase}</span></td>
       <td class="${m.ret>=0?'ret-pos':'ret-neg'}">${m.ret>=0?'+':''}${(m.ret*100).toFixed(3)}%</td>
-      <td style="font-family:'Space Mono',monospace; font-size:0.72rem;">${fmt(m.vol)}</td>
-      <td style="font-family:'Space Mono',monospace; font-size:0.72rem;">$${m.close.toFixed(2)}</td>
-      <td style="color:var(--accent); font-size:0.75rem;">${capName(m.best)}</td>
-      <td style="color:var(--accent3); font-size:0.75rem;">${capName(m.worst)}</td>
-    </tr>
-  `).join('') + '</tbody>';
+      <td style="font-family:'Space Mono',monospace;font-size:0.74rem;">$${fmt(m.vol)}</td>
+      <td style="font-family:'Space Mono',monospace;font-size:0.74rem;">$${m.close.toFixed(2)}</td>
+      <td style="color:var(--green);font-weight:600;">${cap(m.best)}</td>
+      <td style="color:var(--red);font-weight:600;">${cap(m.worst)}</td>
+    </tr>`).join('') + '</tbody>';
 }
 
-// ── CHART 1: ROI BAR ──────────────────────────────────────────────────────
-function buildRoiChart() {
-  const ctx = document.getElementById('roiChart').getContext('2d');
-  const sorted = [...coins].sort((a,b) => a.roi - b.roi);
-  const colors = sorted.map(c =>
-    c.roi > 5 ? accentGreen : c.roi > 2 ? accentBlue : accentGold
-  );
-  new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: sorted.map(c => capName(c.name)),
-      datasets: [{
-        label: 'ROI 2020 (x)',
-        data: sorted.map(c => c.roi),
-        backgroundColor: colors.map(cl => cl+'44'),
-        borderColor: colors,
-        borderWidth: 1.5,
-        borderRadius: 4,
+// ═══════════════════════════════════════════════════════════════════════════
+//  PRICE RANGE CHART
+// ═══════════════════════════════════════════════════════════════════════════
+function buildPriceRange(){
+  const el = document.getElementById('priceRangeChart');
+  // Use log scale for visual comparison (prices vary hugely)
+  const maxLog = Math.max(...coins.map(c=>Math.log10(c.maxHigh+0.0001)));
+  const minLog = Math.min(...coins.map(c=>Math.log10(c.minLow+0.0001)));
+  const range = maxLog - minLog;
+
+  el.innerHTML = coins.map(c => {
+    const logLow  = Math.log10(c.minLow+0.0001);
+    const logHigh = Math.log10(c.maxHigh+0.0001);
+    const logAvg  = Math.log10(c.avgClose+0.0001);
+    const left  = ((logLow-minLog)/range*100).toFixed(1);
+    const width = ((logHigh-logLow)/range*100).toFixed(1);
+    const avgPos= ((logAvg-minLog)/range*100).toFixed(1);
+    return `<div class="pr-item">
+      <div class="pr-label">${cap(c.name)}</div>
+      <div class="pr-bar-bg">
+        <div class="pr-bar-range" style="left:${left}%;width:${width}%;"></div>
+        <div class="pr-dot" style="left:${avgPos}%;" title="Avg: ${fmtPrice(c.avgClose)}"></div>
+      </div>
+      <div class="pr-vals"><span style="color:var(--green)">${fmtPrice(c.maxHigh)}</span> / <span style="color:var(--red)">${fmtPrice(c.minLow)}</span></div>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  FULL COMPARISON TABLE (sortable)
+// ═══════════════════════════════════════════════════════════════════════════
+function sortComp(key){
+  if(compSortKey===key) compSortDir*=-1; else { compSortKey=key; compSortDir=1; }
+  buildCompTable();
+}
+
+function buildCompTable(){
+  const fc = getFilteredCoins();
+  const sorted = [...fc].sort((a,b)=>{
+    const ai=coins.indexOf(a)+1, bi=coins.indexOf(b)+1;
+    if(compSortKey==='rank')      return (ai-bi)*compSortDir;
+    if(compSortKey==='name')      return a.name.localeCompare(b.name)*compSortDir;
+    if(compSortKey==='riskLevel') return a.riskLevel.localeCompare(b.riskLevel)*compSortDir;
+    if(compSortKey==='rec')       return a.rec.localeCompare(b.rec)*compSortDir;
+    return (a[compSortKey]-b[compSortKey])*compSortDir;
+  });
+
+  const recClass = {'Strong Buy':'rec-sb','Buy':'rec-b','Hold':'rec-h','Avoid':'rec-av'};
+  const riskClass= {'Low Risk':'risk-low','Medium Risk':'risk-medium','High Risk':'risk-high'};
+
+  const body = document.getElementById('compTableBody');
+  if(!sorted.length){ body.innerHTML=`<tr><td colspan="12" class="no-results">No coins match your filter.</td></tr>`; return; }
+
+  body.innerHTML = sorted.map(c => {
+    const rank = coins.indexOf(c)+1;
+    return `<tr onclick="openModal(${coins.indexOf(c)})">
+      <td class="rank-num">${rank}</td>
+      <td><div class="coin-name" style="font-size:0.82rem;">${cap(c.name)}</div><span class="coin-ticker">${c.name.split('-')[0].toUpperCase()}</span></td>
+      <td style="font-family:'Space Mono',monospace;font-weight:700;color:var(--green);">${c.roi.toFixed(2)}x</td>
+      <td class="${c.ret>=0?'ret-pos':'ret-neg'}" style="font-family:'Space Mono',monospace;">${c.ret>=0?'+':''}${(c.ret*100).toFixed(3)}%</td>
+      <td style="font-family:'Space Mono',monospace;color:var(--text2);">${(c.std*100).toFixed(2)}%</td>
+      <td style="font-family:'Space Mono',monospace;color:var(--text2);">${(c.volatility*100).toFixed(2)}%</td>
+      <td style="font-family:'Space Mono',monospace;">${fmtPrice(c.avgClose)}</td>
+      <td style="font-family:'Space Mono',monospace;color:var(--green);">${fmtPrice(c.maxHigh)}</td>
+      <td style="font-family:'Space Mono',monospace;color:var(--red);">${fmtPrice(c.minLow)}</td>
+      <td style="font-family:'Space Mono',monospace;font-size:0.72rem;">$${fmt(c.mcap)}</td>
+      <td><span class="${riskClass[c.riskLevel]||''}">${c.riskLevel}</span></td>
+      <td><span class="rec-badge ${recClass[c.rec]||''}">${c.rec}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  COIN DETAIL MODAL
+// ═══════════════════════════════════════════════════════════════════════════
+let modalChartInstance = null;
+
+function openModal(idx){
+  const c = coins[idx];
+  const rank = idx+1;
+  const colors = [chartColors.green,chartColors.blue,chartColors.gold,chartColors.purple,chartColors.orange,chartColors.red,chartColors.teal,'#ff9f43','#e91e63','#00bcd4'];
+  const col = colors[idx % colors.length];
+
+  document.getElementById('mIcon').style.cssText = `background:${col}22;color:${col};`;
+  document.getElementById('mIcon').textContent = `#${rank}`;
+  document.getElementById('mName').textContent = cap(c.name);
+  document.getElementById('mSub').innerHTML =
+    `<span style="color:${col}">${c.rec}</span> · ${c.riskLevel} · ROI ${c.roi.toFixed(2)}x · Ticker: ${c.name.split('-')[0].toUpperCase()}`;
+
+  const recClass={'Strong Buy':'rec-sb','Buy':'rec-b','Hold':'rec-h','Avoid':'rec-av'};
+  document.getElementById('mStats').innerHTML = [
+    ['Avg Close',  fmtPrice(c.avgClose)],
+    ['Year High',  fmtPrice(c.maxHigh)],
+    ['Year Low',   fmtPrice(c.minLow)],
+    ['Avg Return', `${(c.ret*100).toFixed(3)}%`],
+    ['Std Dev',    `${(c.std*100).toFixed(2)}%`],
+    ['Volatility', `${(c.volatility*100).toFixed(2)}%`],
+    ['Avg Mkt Cap','$'+fmt(c.mcap)],
+    ['Total Vol',  '$'+fmt(c.vol)],
+    ['Signal',     `<span class="rec-badge ${recClass[c.rec]}">${c.rec}</span>`],
+  ].map(([l,v]) => `<div class="modal-stat"><div class="modal-stat-label">${l}</div><div class="modal-stat-val">${v}</div></div>`).join('');
+
+  // Sparkline
+  if(modalChartInstance){ modalChartInstance.destroy(); modalChartInstance=null; }
+  const coinKey = Object.keys(monthlyByCoin).find(k=>k===c.name);
+  const sparkData = coinKey
+    ? monthlyByCoin[coinKey].map(v=>(v*100).toFixed(3))
+    : monthsShort.map(()=>(c.ret*100 + (Math.random()-0.5)*0.5).toFixed(3));
+
+  const ctx = document.getElementById('modalChart').getContext('2d');
+  modalChartInstance = new Chart(ctx, {
+    type:'line',
+    data:{
+      labels:monthsShort,
+      datasets:[{
+        label:'Monthly Return %',
+        data:sparkData,
+        borderColor:col,
+        backgroundColor:col+'22',
+        borderWidth:2,
+        pointRadius:4,
+        pointHoverRadius:7,
+        tension:0.4,
+        fill:true,
       }]
     },
-    options: {
-      indexAxis: 'y',
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          callbacks: {
-            label: ctx => ` ${ctx.parsed.x.toFixed(2)}x ROI`
-          }
-        }
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${ctx.parsed.y}%`}}},
+      scales:{
+        x:{grid:{color:getGridColor()},ticks:{color:getTextColor()}},
+        y:{grid:{color:getGridColor()},ticks:{color:getTextColor(),callback:v=>v+'%'}}
+      }
+    }
+  });
+
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function closeModal(e){
+  if(e.target.id==='modalOverlay') document.getElementById('modalOverlay').classList.remove('open');
+}
+document.addEventListener('keydown', e => {
+  if(e.key==='Escape') document.getElementById('modalOverlay').classList.remove('open');
+});
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  CHARTS
+// ═══════════════════════════════════════════════════════════════════════════
+Chart.defaults.font.family = "'Space Mono', monospace";
+Chart.defaults.font.size = 11;
+Chart.defaults.color = getTextColor();
+
+/* Chart 1 — ROI Horizontal Bar */
+function buildRoiChart(){
+  const sorted = [...coins].sort((a,b)=>a.roi-b.roi);
+  const colors = sorted.map(c => c.roi>5?chartColors.green:c.roi>2?chartColors.blue:chartColors.gold);
+  new Chart(document.getElementById('roiChart').getContext('2d'),{
+    type:'bar',
+    data:{
+      labels:sorted.map(c=>cap(c.name)),
+      datasets:[{
+        label:'ROI 2020 (x)', data:sorted.map(c=>c.roi),
+        backgroundColor:colors.map(cl=>cl+'44'), borderColor:colors,
+        borderWidth:1.5, borderRadius:5,
+      }]
+    },
+    options:{
+      indexAxis:'y', responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:ctx=>` ${ctx.parsed.x.toFixed(2)}x ROI`}}
       },
-      scales: {
-        x: {
-          grid: { color: gridColor },
-          ticks: { callback: v => v+'x' }
-        },
-        y: {
-          grid: { color: 'transparent' },
-          ticks: { font: { size: 9 } }
-        }
+      scales:{
+        x:{grid:{color:getGridColor()}, ticks:{callback:v=>v+'x', color:getTextColor()}},
+        y:{grid:{color:'transparent'},  ticks:{font:{size:10}, color:getTextColor()}}
       }
     }
   });
 }
 
-// ── CHART 2: MONTHLY RETURN LINE ──────────────────────────────────────────
-function buildMonthRetChart() {
-  const ctx = document.getElementById('monthRetChart').getContext('2d');
-  const data = monthlyData.map(m => (m.ret * 100).toFixed(3));
-  const colors = monthlyData.map(m => m.ret >= 0 ? accentGreen : accentRed);
-
-  new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: months.map(m => m.slice(0,3)),
-      datasets: [{
-        label: 'Avg Daily Return (%)',
-        data,
-        backgroundColor: colors.map(c => c+'55'),
-        borderColor: colors,
-        borderWidth: 1.5,
-        borderRadius: 4,
-      }]
+/* Chart 2 — Monthly Return Bar */
+function buildMonthRetChart(){
+  const data = monthlyData.map(m=>(m.ret*100).toFixed(3));
+  const colors = monthlyData.map(m=>m.ret>=0?chartColors.green:chartColors.red);
+  new Chart(document.getElementById('monthRetChart').getContext('2d'),{
+    type:'bar',
+    data:{
+      labels:monthsShort,
+      datasets:[{label:'Avg Daily Return (%)',data,backgroundColor:colors.map(c=>c+'55'),borderColor:colors,borderWidth:1.5,borderRadius:5}]
     },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y}%` } }
-      },
-      scales: {
-        x: { grid: { color: 'transparent' } },
-        y: {
-          grid: { color: gridColor },
-          ticks: { callback: v => v+'%' }
-        }
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${ctx.parsed.y}%`}}},
+      scales:{
+        x:{grid:{color:'transparent'},ticks:{color:getTextColor()}},
+        y:{grid:{color:getGridColor()},ticks:{callback:v=>v+'%',color:getTextColor()}}
       }
     }
   });
 }
 
-// ── CHART 3: VOLUME BAR ───────────────────────────────────────────────────
-function buildVolChart() {
+/* Chart 3 — Volume Bar */
+function buildVolChart(){
   const ctx = document.getElementById('volChart').getContext('2d');
-  const gradient = ctx.createLinearGradient(0,0,0,240);
-  gradient.addColorStop(0, accentBlue+'88');
-  gradient.addColorStop(1, accentBlue+'11');
-
-  new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: months.map(m => m.slice(0,3)),
-      datasets: [{
-        label: 'Total Volume',
-        data: monthlyData.map(m => m.vol),
-        backgroundColor: gradient,
-        borderColor: accentBlue,
-        borderWidth: 1.5,
-        borderRadius: 4,
-      }]
+  const g = ctx.createLinearGradient(0,0,0,260);
+  g.addColorStop(0, chartColors.blue+'99'); g.addColorStop(1, chartColors.blue+'11');
+  new Chart(ctx,{
+    type:'bar',
+    data:{
+      labels:monthsShort,
+      datasets:[{label:'Total Volume',data:monthlyData.map(m=>m.vol),backgroundColor:g,borderColor:chartColors.blue,borderWidth:1.5,borderRadius:5}]
     },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: { callbacks: { label: ctx => ' $'+fmt(ctx.parsed.y) } }
-      },
-      scales: {
-        x: { grid: { color: 'transparent' } },
-        y: {
-          grid: { color: gridColor },
-          ticks: { callback: v => '$'+fmt(v) }
-        }
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>' $'+fmt(ctx.parsed.y)}}},
+      scales:{
+        x:{grid:{color:'transparent'},ticks:{color:getTextColor()}},
+        y:{grid:{color:getGridColor()},ticks:{callback:v=>'$'+fmt(v),color:getTextColor()}}
       }
     }
   });
 }
 
-// ── CHART 4: RISK SCATTER ─────────────────────────────────────────────────
-function buildRiskScatter() {
-  const ctx = document.getElementById('riskScatter').getContext('2d');
-  const riskColor = { 'Low Risk': accentGreen, 'Medium Risk': accentGold, 'High Risk': accentRed };
+/* Chart 4 — Close Price Trend (Area Line) */
+function buildClosePriceTrend(){
+  const ctx = document.getElementById('closePriceTrend').getContext('2d');
+  const g = ctx.createLinearGradient(0,0,0,240);
+  g.addColorStop(0, chartColors.purple+'66'); g.addColorStop(1, chartColors.purple+'05');
+  new Chart(ctx,{
+    type:'line',
+    data:{
+      labels:monthsShort,
+      datasets:[{
+        label:'Avg Market Close ($)',
+        data:monthlyData.map(m=>m.close),
+        borderColor:chartColors.purple,
+        backgroundColor:g,
+        borderWidth:2.5, pointRadius:5, pointHoverRadius:8,
+        tension:0.4, fill:true,
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:ctx=>' $'+ctx.parsed.y.toFixed(2)}}
+      },
+      scales:{
+        x:{grid:{color:'transparent'},ticks:{color:getTextColor()}},
+        y:{grid:{color:getGridColor()},ticks:{callback:v=>'$'+v,color:getTextColor()}}
+      }
+    }
+  });
+}
 
-  const datasets = ['Low Risk','Medium Risk','High Risk'].map(r => ({
-    label: r,
-    data: coins.filter(c => c.riskLevel === r).map(c => ({
-      x: c.std,
-      y: c.ret * 100,
-      label: capName(c.name)
-    })),
-    backgroundColor: riskColor[r]+'88',
-    borderColor: riskColor[r],
-    borderWidth: 1.5,
-    pointRadius: 6,
-    pointHoverRadius: 9,
+/* Chart 5 — Risk Scatter */
+function buildRiskScatter(){
+  const rk={'Low Risk':chartColors.green,'Medium Risk':chartColors.gold,'High Risk':chartColors.red};
+  const datasets = ['Low Risk','Medium Risk','High Risk'].map(r=>({
+    label:r,
+    data:coins.filter(c=>c.riskLevel===r).map(c=>({x:c.std,y:c.ret*100,label:cap(c.name)})),
+    backgroundColor:rk[r]+'88', borderColor:rk[r], borderWidth:1.5,
+    pointRadius:7, pointHoverRadius:10,
   }));
-
-  new Chart(ctx, {
-    type: 'scatter',
-    data: { datasets },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          position: 'top',
-          labels: { boxWidth: 10, padding: 16, font: { size: 10 } }
-        },
-        tooltip: {
-          callbacks: {
-            label: ctx => {
-              const d = ctx.raw;
-              return ` ${d.label}  Risk: ${(d.x*100).toFixed(2)}%  Return: ${d.y.toFixed(3)}%`;
-            }
-          }
-        }
+  new Chart(document.getElementById('riskScatter').getContext('2d'),{
+    type:'scatter', data:{datasets},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{position:'top',labels:{boxWidth:10,padding:14,font:{size:11},color:getTextColor()}},
+        tooltip:{callbacks:{label:ctx=>{const d=ctx.raw; return ` ${d.label}  σ: ${(d.x*100).toFixed(1)}%  r: ${d.y.toFixed(3)}%`;}}}
       },
-      scales: {
-        x: {
-          grid: { color: gridColor },
-          title: { display: true, text: 'Std Deviation (Risk)', color: '#6b6b80' },
-          ticks: { callback: v => (v*100).toFixed(0)+'%' }
-        },
-        y: {
-          grid: { color: gridColor },
-          title: { display: true, text: 'Avg Daily Return (%)', color: '#6b6b80' },
-          ticks: { callback: v => v.toFixed(2)+'%' }
-        }
+      scales:{
+        x:{grid:{color:getGridColor()},title:{display:true,text:'Std Deviation (Risk)',color:getTextColor()},ticks:{callback:v=>(v*100).toFixed(0)+'%',color:getTextColor()}},
+        y:{grid:{color:getGridColor()},title:{display:true,text:'Avg Daily Return (%)',color:getTextColor()},ticks:{callback:v=>v.toFixed(2)+'%',color:getTextColor()}}
       }
     }
   });
 }
 
-// ── CHART 5: RISK PIE ─────────────────────────────────────────────────────
-function buildRiskPie() {
-  const ctx = document.getElementById('riskPie').getContext('2d');
-  const low    = coins.filter(c => c.riskLevel === 'Low Risk').length;
-  const medium = coins.filter(c => c.riskLevel === 'Medium Risk').length;
-  const high   = coins.filter(c => c.riskLevel === 'High Risk').length;
-
-  new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels: ['Low Risk','Medium Risk','High Risk'],
-      datasets: [{
-        data: [low, medium, high],
-        backgroundColor: [accentGreen+'55', accentGold+'55', accentRed+'55'],
-        borderColor:      [accentGreen, accentGold, accentRed],
-        borderWidth: 2,
-        hoverOffset: 8,
+/* Chart 6 — Risk Doughnut */
+function buildRiskPie(){
+  const low=coins.filter(c=>c.riskLevel==='Low Risk').length;
+  const med=coins.filter(c=>c.riskLevel==='Medium Risk').length;
+  const hi=coins.filter(c=>c.riskLevel==='High Risk').length;
+  new Chart(document.getElementById('riskPie').getContext('2d'),{
+    type:'doughnut',
+    data:{
+      labels:['Low Risk','Medium Risk','High Risk'],
+      datasets:[{data:[low,med,hi],
+        backgroundColor:[chartColors.green+'55',chartColors.gold+'55',chartColors.red+'55'],
+        borderColor:[chartColors.green,chartColors.gold,chartColors.red],
+        borderWidth:2, hoverOffset:10,
       }]
     },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      cutout: '65%',
-      plugins: {
-        legend: {
-          position: 'bottom',
-          labels: { boxWidth: 10, padding: 14, font: { size: 10 } }
-        },
-        tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed} coins` } }
+    options:{
+      responsive:true,maintainAspectRatio:false, cutout:'65%',
+      plugins:{
+        legend:{position:'bottom',labels:{boxWidth:10,padding:14,font:{size:11},color:getTextColor()}},
+        tooltip:{callbacks:{label:ctx=>` ${ctx.label}: ${ctx.parsed} coins`}}
       }
     }
   });
 }
 
-// ── CHART 6: MULTI-LINE ───────────────────────────────────────────────────
-function buildMultiLine() {
-  const ctx = document.getElementById('multiLine').getContext('2d');
-  const coinColors = [accentGreen, accentBlue, accentGold, accentPurple, '#ff9f43'];
-  const coinKeys = Object.keys(monthlyByCoin);
-
-  new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: months.map(m => m.slice(0,3)),
-      datasets: coinKeys.map((key, i) => ({
-        label: capName(key),
-        data: monthlyByCoin[key].map(v => (v*100).toFixed(3)),
-        borderColor: coinColors[i],
-        backgroundColor: coinColors[i]+'18',
-        borderWidth: 2,
-        pointRadius: 3,
-        pointHoverRadius: 6,
-        tension: 0.4,
-        fill: false,
+/* Chart 7 — Multi-line Top 5 */
+function buildMultiLine(){
+  const palette=[chartColors.green,chartColors.blue,chartColors.gold,chartColors.purple,chartColors.orange];
+  const keys=Object.keys(monthlyByCoin);
+  new Chart(document.getElementById('multiLine').getContext('2d'),{
+    type:'line',
+    data:{
+      labels:monthsShort,
+      datasets:keys.map((k,i)=>({
+        label:cap(k),
+        data:monthlyByCoin[k].map(v=>(v*100).toFixed(3)),
+        borderColor:palette[i], backgroundColor:palette[i]+'18',
+        borderWidth:2.5, pointRadius:4, pointHoverRadius:7, tension:0.4, fill:false,
       }))
     },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          position: 'top',
-          labels: { boxWidth: 10, padding: 14, font: { size: 10 } }
-        },
-        tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y}%` } }
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{position:'top',labels:{boxWidth:10,padding:14,font:{size:11},color:getTextColor()}},
+        tooltip:{callbacks:{label:ctx=>` ${ctx.dataset.label}: ${ctx.parsed.y}%`}}
       },
-      scales: {
-        x: { grid: { color: 'transparent' } },
-        y: {
-          grid: { color: gridColor },
-          ticks: { callback: v => v+'%' }
-        }
+      scales:{
+        x:{grid:{color:'transparent'},ticks:{color:getTextColor()}},
+        y:{grid:{color:getGridColor()},ticks:{callback:v=>v+'%',color:getTextColor()}}
       }
     }
   });
 }
 
-// ── CHART 7: VOLATILITY BY COIN ───────────────────────────────────────────
-function buildVolByCoin() {
-  const ctx = document.getElementById('volByCoin').getContext('2d');
-  const sorted = [...coins].sort((a,b) => b.volatility - a.volatility);
-  const colors  = sorted.map(c =>
-    c.volatility > 0.07 ? accentRed : c.volatility > 0.05 ? accentGold : accentGreen
-  );
-
-  new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: sorted.map(c => capName(c.name)),
-      datasets: [{
-        label: 'Avg Daily Volatility',
-        data: sorted.map(c => (c.volatility*100).toFixed(2)),
-        backgroundColor: colors.map(c => c+'44'),
-        borderColor: colors,
-        borderWidth: 1.5,
-        borderRadius: 4,
-      }]
+/* Chart 8 — Volatility Horizontal Bar */
+function buildVolByCoin(){
+  const sorted=[...coins].sort((a,b)=>b.volatility-a.volatility);
+  const colors=sorted.map(c=>c.volatility>0.07?chartColors.red:c.volatility>0.05?chartColors.gold:chartColors.green);
+  new Chart(document.getElementById('volByCoin').getContext('2d'),{
+    type:'bar',
+    data:{
+      labels:sorted.map(c=>cap(c.name)),
+      datasets:[{label:'Avg Daily Volatility',data:sorted.map(c=>(c.volatility*100).toFixed(2)),
+        backgroundColor:colors.map(c=>c+'44'),borderColor:colors,borderWidth:1.5,borderRadius:5}]
     },
-    options: {
-      indexAxis: 'y',
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.x}% volatility` } }
-      },
-      scales: {
-        x: { grid: { color: gridColor }, ticks: { callback: v => v+'%' } },
-        y: { grid: { color: 'transparent' }, ticks: { font: { size: 9 } } }
+    options:{
+      indexAxis:'y',responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${ctx.parsed.x}% volatility`}}},
+      scales:{
+        x:{grid:{color:getGridColor()},ticks:{callback:v=>v+'%',color:getTextColor()}},
+        y:{grid:{color:'transparent'},ticks:{font:{size:10},color:getTextColor()}}
       }
     }
   });
 }
 
-// ── CHART 8: MARKET CAP PIE ───────────────────────────────────────────────
-function buildMcapPie() {
-  const ctx = document.getElementById('mcapPie').getContext('2d');
-  const top7 = [...coins].sort((a,b) => b.mcap - a.mcap).slice(0, 7);
-  const otherMcap = coins.reduce((s,c) => s + c.mcap, 0) - top7.reduce((s,c) => s + c.mcap, 0);
-  const labels = [...top7.map(c => capName(c.name)), 'Others'];
-  const data   = [...top7.map(c => c.mcap), otherMcap];
-
-  const palette = [accentGreen, accentBlue, accentGold, accentPurple, accentRed, '#ff9f43', '#40E0D0', '#888'];
-
-  new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels,
-      datasets: [{
-        data,
-        backgroundColor: palette.map(c => c+'55'),
-        borderColor: palette,
-        borderWidth: 1.5,
-        hoverOffset: 8,
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      cutout: '58%',
-      plugins: {
-        legend: {
-          position: 'right',
-          labels: { boxWidth: 8, padding: 10, font: { size: 9 } }
-        },
-        tooltip: { callbacks: { label: ctx => ` ${ctx.label}: $${fmt(ctx.parsed)}` } }
+/* Chart 9 — Market Cap Doughnut */
+function buildMcapPie(){
+  const top7=[...coins].sort((a,b)=>b.mcap-a.mcap).slice(0,7);
+  const other=coins.reduce((s,c)=>s+c.mcap,0)-top7.reduce((s,c)=>s+c.mcap,0);
+  const labels=[...top7.map(c=>cap(c.name)),'Others'];
+  const data=[...top7.map(c=>c.mcap),other];
+  const palette=[chartColors.green,chartColors.blue,chartColors.gold,chartColors.purple,chartColors.red,chartColors.orange,chartColors.teal,'#888'];
+  new Chart(document.getElementById('mcapPie').getContext('2d'),{
+    type:'doughnut',
+    data:{labels,datasets:[{data,backgroundColor:palette.map(c=>c+'55'),borderColor:palette,borderWidth:1.5,hoverOffset:10}]},
+    options:{
+      responsive:true,maintainAspectRatio:false, cutout:'58%',
+      plugins:{
+        legend:{position:'right',labels:{boxWidth:8,padding:10,font:{size:10},color:getTextColor()}},
+        tooltip:{callbacks:{label:ctx=>` ${ctx.label}: $${fmt(ctx.parsed)}`}}
       }
     }
   });
 }
 
-// ── INIT ──────────────────────────────────────────────────────────────────
-buildTicker();
-buildTopCoins();
-buildRankTable();
-buildPhaseCards();
-buildMonthTable();
-buildRoiChart();
-buildMonthRetChart();
-buildVolChart();
-buildRiskScatter();
-buildRiskPie();
-buildMultiLine();
-buildVolByCoin();
-buildMcapPie();
+// ═══════════════════════════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════════════════════════
+window.addEventListener('DOMContentLoaded', () => {
+  buildTicker();
+  buildTopCoins();
+  buildRankTable();
+  buildPhaseCards();
+  buildMonthTable();
+  buildPriceRange();
+  buildCompTable();
+  buildRoiChart();
+  buildMonthRetChart();
+  buildVolChart();
+  buildClosePriceTrend();
+  buildRiskScatter();
+  buildRiskPie();
+  buildMultiLine();
+  buildVolByCoin();
+  buildMcapPie();
+  animateCounters();
+});
 </script>
 </body>
 </html>

@@ -245,4 +245,4 @@ This project demonstrates how data analytics can support smarter investment deci
 ---
 ---
 
-# Thank You ❤️
+# Thank You.

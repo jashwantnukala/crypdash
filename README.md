@@ -85,7 +85,7 @@ This detailed dataset allows deep performance and risk analysis across 20 major 
 ## 🛠 Tools & Techniques Used
 
 ### Primary Tools:
-# HTML + CSS + JavaScript 🌐 · Chart.js 📊
+# Microsoft Excel
 
 ### Techniques Used:
 

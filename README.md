@@ -1,128 +1,188 @@
-# 💹 CRYPDASH 2020 – Crypto Market Analytics
-### 📊 Data Analytics Project
+<div align="center">
 
-![Crypto Analytics Banner](https://img.shields.io/badge/Project-Data%20Analytics-green?style=for-the-badge)
-![Excel](https://img.shields.io/badge/Tool-MS%20Excel-success?style=for-the-badge)
-![Dashboard](https://img.shields.io/badge/Visualization-Interactive%20Dashboard-blue?style=for-the-badge)
+# 💹 CRYPDASH 2020
+## Crypto Market Analytics Dashboard
+
+<img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=22&pause=1000&color=00E07A&center=true&vCenter=true&width=600&lines=Crypto+Market+Analytics+%F0%9F%93%8A;Full+Year+2020+%C2%B7+20+Coins+%C2%B7+6%2C708+Records;Interactive+Web+Dashboard+%F0%9F%92%B9;Built+with+HTML+%2B+CSS+%2B+JS+%2B+Chart.js" alt="Typing SVG" />
+
+<br/>
+
+[![Live Demo](https://img.shields.io/badge/🌐%20Live%20Demo-CRYPDASH-00e07a?style=for-the-badge&logoColor=white)](https://jashwantnukala.github.io/crypdash/)
+[![Data Source](https://img.shields.io/badge/Data-CoinGecko%202020-2196f3?style=for-the-badge)](https://www.coingecko.com/)
+[![Made With](https://img.shields.io/badge/Made%20with-HTML%20%2B%20CSS%20%2B%20JS-ffc107?style=for-the-badge)](https://jashwantnukala.github.io/crypdash/)
+[![Excel](https://img.shields.io/badge/Tool-MS%20Excel-217346?style=for-the-badge&logo=microsoft-excel&logoColor=white)](https://jashwantnukala.github.io/crypdash/)
+[![Chart.js](https://img.shields.io/badge/Charts-Chart.js-ff6384?style=for-the-badge)](https://www.chartjs.org/)
+[![GitHub Pages](https://img.shields.io/badge/Deployed-GitHub%20Pages-222222?style=for-the-badge&logo=github&logoColor=white)](https://jashwantnukala.github.io/crypdash/)
+
+<br/>
+
+> ### 🔗 Live Dashboard → **[https://jashwantnukala.github.io/crypdash/](https://jashwantnukala.github.io/crypdash/)**
+
+<br/>
+
+</div>
+
+---
+
+<div align="center">
+
+## 📸 Dashboard Preview
+
+[![CRYPDASH Dashboard](https://img.shields.io/badge/🚀%20Click%20to%20View%20Live%20Dashboard-00e07a?style=for-the-badge)](https://jashwantnukala.github.io/crypdash/)
+
+*An interactive single-page analytics dashboard for the 2020 Crypto Market*
+
+</div>
 
 ---
 
 ## 📌 Project Overview
 
-The cryptocurrency market generates enormous volumes of data every day — prices, volumes, market caps, and returns shift constantly across hundreds of coins. Analyzing such datasets manually is complex and often misleading without proper visualization.
+> The cryptocurrency market generates enormous volumes of data every day — prices, volumes, market caps, and returns shift constantly. Analyzing such datasets manually is nearly impossible without proper tooling and visualization.
 
-This project focuses on **CRYPDASH 2020 – Crypto Market Analytics**, where raw historical cryptocurrency data is transformed into meaningful insights using **Data Analytics techniques**.
+**CRYPDASH 2020** transforms raw **CoinGecko historical data** into a fully interactive analytics experience — covering **20 cryptocurrencies**, **6,708 daily records**, and **12 months** of the most volatile year in recent crypto history.
 
-The project helps in understanding:
+### 🌟 What This Dashboard Covers
 
-- Coin Performance & ROI 📈
-- Market Phase Behaviour 🔄
-- Risk vs. Return Analysis ⚖️
-- Batting & Bowling Analysis ⚡
-- Volatility & Market Cap Trends 📊
-- Tournament Insights 🏆
+| Area | Details |
+|---|---|
+| 💰 Coin ROI | Full-year return on investment for all 20 coins |
+| ⚖️ Risk Analysis | Volatility, std deviation, risk classification |
+| 📅 Market Phases | Bull Run → COVID Crash → Recovery → Year-End Rally |
+| 📆 Monthly Trends | Return, volume, best & worst coin per month |
+| 🪙 Coin Comparison | Side-by-side stats across all 20 cryptos |
+| 📈 Price Ranges | Year high, avg, and low for every coin |
 
 ---
 
 ## ❗ Problem Statement
 
-Cryptocurrency datasets are:
+Raw cryptocurrency data is:
 
-- Large and constantly changing
-- Spread across many coins simultaneously
-- Difficult to compare without visual context
-- Hard to interpret for investment decisions
+- 📦 **Large and complex** — thousands of daily records across many coins
+- 🔀 **Hard to compare** — prices range from $0.001 to $20,000+
+- 📉 **Easy to misread** — without context, numbers are meaningless
+- 🕵️ **Full of hidden patterns** — trends invisible without visualization
 
-Important insights like:
+This project solves all of that by building a system that can:
 
-- Which coins had the best return in 2020
-- How market phases affected performance
-- Which coins carry the most risk
-- How volume and price correlated
-
-often remain hidden in raw numbers.
-
-This project solves this by creating a system that can:
-
-✔ Simplify  
-✔ Analyze  
-✔ Visualize  
-✔ Present data effectively
+```
+✔  Collect & Clean      →   Raw CoinGecko data organized & structured in Excel
+✔  Analyze              →   ROI, volatility, risk scores computed
+✔  Visualize            →   9 Chart.js charts + custom UI components
+✔  Present              →   Fully interactive single-page dashboard
+```
 
 ---
 
 ## 🎯 Objectives
 
-- Collect and organize historical crypto market data
-- Clean and structure the dataset for analysis
-- Identify KPIs like ROI, avg return, volatility, market cap
-- Analyze individual coin performance across the full year
-- Study market phases (Bull Run, COVID Crash, Recovery, Year-End Rally)
-- Create an interactive web dashboard for better understanding
+- [x] Collect and organize 6,708 daily OHLCV records across 20 coins
+- [x] Clean and preprocess the dataset using **MS Excel**
+- [x] Identify KPIs — ROI, avg return, std deviation, volatility, market cap
+- [x] Analyze individual coin performance across the full year
+- [x] Study market phases and their impact on coin behavior
+- [x] Build a fully interactive, theme-switchable web dashboard
+- [x] Deploy the dashboard live on GitHub Pages
 
 ---
 
 ## 🗂 Dataset Description
 
-### Dataset Used:
-**CoinGecko Historical Cryptocurrency Dataset — Full Year 2020**
+<div align="center">
 
-### Type:
-**Daily OHLCV Dataset (Open, High, Low, Close, Volume)**
+| Property | Details |
+|---|---|
+| **Source** | CoinGecko Historical API |
+| **Year** | 2020 (Full Calendar Year) |
+| **Type** | Daily OHLCV (Open, High, Low, Close, Volume) |
+| **Records** | 6,708 daily entries |
+| **Coins** | 20 major cryptocurrencies |
+| **Preprocessing Tool** | Microsoft Excel |
 
-### Dataset Includes:
+</div>
 
-- Coin details (name, ticker, market cap)
-- Daily price data (open, high, low, close)
-- Volume and market capitalization
-- Derived metrics (ROI, avg return, std deviation, volatility)
-- Market phases (Bull Run, COVID Crash, Recovery, Year-End Rally)
+### 📋 Dataset Fields
 
-This detailed dataset allows deep performance and risk analysis across 20 major cryptocurrencies.
+```
+📁 Dataset
+├── 🗓  Date
+├── 🪙  Coin Name & Ticker
+├── 💵  Open / High / Low / Close Price
+├── 📦  Daily Volume
+├── 🏦  Market Capitalization
+└── 📊  Derived: ROI · Avg Return · Std Dev · Volatility · Risk Level · Signal
+```
 
 ---
 
-## 🛠 Tools & Techniques Used
+## 🛠 Tools & Technologies
 
-### Primary Tools:
-# Microsoft Excel
+<div align="center">
 
-### Techniques Used:
+| Tool | Purpose |
+|---|---|
+| ![Excel](https://img.shields.io/badge/MS%20Excel-217346?style=flat-square&logo=microsoft-excel&logoColor=white) | Data Cleaning, Preprocessing & KPI Calculation |
+| ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white) | Dashboard Structure & Markup |
+| ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white) | Styling, Theming, Animations & Layout |
+| ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black) | Data Rendering, Interactivity & Logic |
+| ![Chart.js](https://img.shields.io/badge/Chart.js-FF6384?style=flat-square&logo=chartdotjs&logoColor=white) | All 9 Data Visualizations |
+| ![Google Fonts](https://img.shields.io/badge/Google%20Fonts-4285F4?style=flat-square&logo=google&logoColor=white) | Typography (Syne, Space Mono) |
+| ![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-222222?style=flat-square&logo=github&logoColor=white) | Live Deployment |
 
-- Data Cleaning & Preprocessing
-- ROI Calculation
-- Statistical Analysis (Std Deviation, Volatility)
-- Risk Classification
-- Investment Signal Generation
-- Interactive Dashboard Design
-- Responsive Layout with CSS Grid
+</div>
 
-### Visualizations Used:
+### 🔧 Key Techniques Used
 
-- Horizontal Bar Charts (ROI, Volatility)
-- Area Line Charts (Price Trend)
-- Multi-line Charts (Top 5 Monthly Returns)
-- Scatter Plot (Risk vs. Return)
-- Doughnut Charts (Risk Distribution, Market Cap)
-- KPI Summary Cards
-- Custom HTML Range Bar Chart (Price Range)
+- Data Cleaning & Normalization *(MS Excel)*
+- ROI & Average Return Calculation
+- Statistical Analysis — Std Deviation & Daily Volatility
+- Risk Classification (Low / Medium / High)
+- Investment Signal Generation (Strong Buy / Buy / Hold / Avoid)
+- CSS Custom Properties for dual Dark 🌙 / Light ☀️ theming
+- CSS Grid & `clamp()` for fully responsive layouts
+- Animated counters, ticker scroll, and fade-up animations
+- Log-scale price range visualization
+- Sortable tables with multi-key comparisons
 
 ---
 
 ## 📈 Key Performance Indicators (KPIs)
 
-| KPI | Value |
-|---|---:|
-| Total Daily Records | 6,708 |
-| Coins Tracked | 20 |
-| Best ROI 2020 | +9.98x (Chainlink) |
-| Worst ROI 2020 | 0.07x (USD Coin) |
-| Average Daily Return | +0.39% |
-| Total Market Phases | 4 |
-| Number of Venues (Exchanges) | CoinGecko API |
-| Average Runs per Match | — |
+<div align="center">
 
-These KPIs provide a quick tournament-level overview of the 2020 crypto market.
+| 🏆 KPI | 📊 Value |
+|---|---:|
+| Total Daily Records | **6,708** |
+| Cryptocurrencies Tracked | **20** |
+| Best ROI 2020 | **+9.98x** *(Chainlink)* |
+| Worst ROI 2020 | **0.07x** *(USD Coin)* |
+| Average Daily Return | **+0.39%** |
+| Total Market Phases | **4** |
+| Biggest Single-Month Drop | **−0.55%** *(March — COVID Crash)* |
+| Biggest Single-Month Gain | **+1.43%** *(January — Bull Run)* |
+
+</div>
+
+---
+
+## 📊 Charts & Visualizations
+
+The dashboard features **9 Chart.js charts** plus custom-built HTML/CSS components:
+
+```
+📊 Visualizations
+├── 📊  Horizontal Bar    →  ROI for all 20 coins (sorted)
+├── 📊  Horizontal Bar    →  Avg daily volatility per coin
+├── 📈  Area Line         →  Monthly avg close price trend
+├── 📈  Multi-line        →  Top 5 coins monthly return comparison
+├── 📉  Bar (Green/Red)   →  Avg daily return per month
+├── 📦  Bar (Gradient)    →  Total market volume per month
+├── 🔵  Scatter Plot      →  Risk vs. Return for all 20 coins
+├── 🍩  Doughnut          →  Risk level distribution
+├── 🍩  Doughnut          →  Market cap share (top 7 + others)
+└── ▬   Custom Range Bars →  Year High / Avg / Low (log scale)
+```
 
 ---
 
@@ -132,29 +192,28 @@ These KPIs provide a quick tournament-level overview of the 2020 crypto market.
 
 ### 💰 ROI Analysis
 
-- Calculated full-year ROI for all 20 coins
+- Calculated full-year return on investment for all 20 coins
 - Ranked coins from best to worst performer
-- Identified top 5 performers: Chainlink, NEM, Cardano, Stellar, CRO
+- Top 5: **Chainlink · NEM · Cardano · Stellar · CRO**
 
 ---
 
 ### ⚖️ Risk & Return Analysis
 
 - Computed standard deviation and daily volatility per coin
-- Classified coins into Low / Medium / High Risk
-- Generated investment signals: Strong Buy, Buy, Hold, Avoid
+- Classified coins into **Low / Medium / High Risk** categories
+- Assigned investment signals: **Strong Buy · Buy · Hold · Avoid**
 
 ---
 
-### 📅 Phase Analysis
+### 📅 Market Phase Analysis
 
-- Divided 2020 into four market phases:
-  - Bull Run (Jan – Feb)
-  - COVID Crash (March)
-  - Recovery (Apr – Aug)
-  - Year-End Rally (Sep – Dec)
-
-- Studied avg return, volume, and close price in each phase
+| Phase | Period | Avg Daily Return | Characteristic |
+|---|---|---|---|
+| 🟢 Bull Run | Jan – Feb | +0.770% | Pre-COVID Rally |
+| 🔴 COVID Crash | March | −0.546% | Market Collapse |
+| 🔵 Recovery | Apr – Aug | +0.575% | Gradual Stabilisation |
+| 🟡 Year-End Rally | Sep – Dec | +0.191% | BTC hits All-Time High |
 
 ---
 
@@ -166,83 +225,112 @@ These KPIs provide a quick tournament-level overview of the 2020 crypto market.
 
 ---
 
-### 🪙 Coin Comparison
+### 🪙 Full Coin Comparison
 
-- Full side-by-side comparison of all 20 coins
-- Metrics: ROI, avg return, std dev, volatility, avg close, year high, year low, market cap, risk level, signal
+- Side-by-side comparison of all 20 coins across 10+ metrics
+- Sortable by any column, filterable by recommendation signal or risk level
 
 ---
 
-## 📊 Dashboard Overview
+## 🚀 Dashboard Features
 
-A comprehensive single-page web dashboard was created with:
-
-### Features:
-
-- KPI Cards with animated counters
-- Live Ticker (scrolling coin data)
-- Sortable Investment Leaderboard
-- Recommendation Filter Buttons (Strong Buy / Buy / Hold / Avoid)
-- Coin Search Bar
-- Coin Detail Modal (click any coin for full breakdown + sparkline)
-- Market Phase Summary Cards
-- Monthly Breakdown Table
-- Price Range Visualization (log scale)
-- Full Sortable Comparison Table
-- Light / Dark Mode Toggle 🌙 ☀️
-- Responsive Layout
-
-This helps users quickly understand complex crypto market data.
+```
+🎛  Interactive Dashboard
+├── 🌙 / ☀️   Dark & Light Mode Toggle
+├── 🔍        Live Coin Search Bar
+├── 🏷        Recommendation Filter Buttons
+│             (Strong Buy / Buy / Hold / Avoid / Low Risk / High Risk)
+├── 📡        Scrolling Live Ticker (all 20 coins)
+├── 🃏        KPI Cards with Animated Counters
+├── 🏅        Top 5 Performers Badges
+├── 📋        Sortable Investment Leaderboard
+├── 🪟        Coin Detail Modal (click any coin)
+│             └── 9 stat cards + monthly sparkline chart
+├── 🃏        Market Phase Summary Cards
+├── 📅        Monthly Breakdown Table
+├── ▬         Price Range Visualization (log scale)
+└── 📋        Full 20-Coin Sortable Comparison Table
+```
 
 ---
 
 ## 💡 Key Insights
 
-### Major Findings:
+> 💡 **Chainlink (LINK)** delivered the highest ROI of 2020 at an extraordinary **9.98x**
 
-- **Chainlink** delivered the highest ROI of the year at **9.98x**
-- The **COVID Crash in March** caused the sharpest avg daily return drop (−0.55%)
-- **Death Overs equivalent** — the Year-End Rally saw BTC hit its all-time high
-- Coins with **lower volatility** (BTC, WBTC) offered more stable, predictable returns
-- **Stablecoins** (Tether, USD Coin) had near-zero ROI — useful for risk analysis benchmarking
-- Teams (coins) with higher strike rates (avg return) consistently outperformed
+> 📉 **The COVID Crash (March 2020)** caused the steepest avg daily return of **−0.55%**, wiping gains across all coins
+
+> 🚀 **The Year-End Rally** saw Bitcoin hit its then all-time high, driven by institutional adoption
+
+> 🛡 **Bitcoin & Wrapped Bitcoin** (Low Risk) offered the most stable, predictable return profiles
+
+> 💵 **Stablecoins** (Tether, USD Coin) served as useful 0-volatility benchmarks for risk comparison
+
+> 📊 **Higher avg daily return consistently correlated with better full-year ROI** — sustained momentum matters more than single spike events
 
 ---
 
 ## ✅ Conclusion
 
-This project successfully transformed raw CoinGecko historical data into meaningful, visual insights about the 2020 cryptocurrency market.
+CRYPDASH 2020 successfully transformed raw CoinGecko historical data into a rich, interactive analytics experience.
 
 ### It helped in:
 
-- Understanding the importance of Data Analytics in Finance
-- Improving visualization and dashboard design skills
-- Building a fully interactive single-page dashboard without any framework
-- Making complex crypto data easy to explore and compare
+- ✅ Understanding the importance of **Data Analytics in Finance & Crypto**
+- ✅ Leveraging **MS Excel** for effective data cleaning and KPI extraction
+- ✅ Building a **framework-free web dashboard** with production-grade quality
+- ✅ Making complex crypto data **accessible and explorable** for any audience
 
-This project demonstrates how data analytics can support smarter investment decision-making.
+This project demonstrates how data analytics can support smarter investment decision-making in modern financial markets.
 
 ---
 
-## 👨‍💻 Group Members
+## 👨‍💻 Team
 
-- Jashwant Nukala
-- Aarushi Patil
-- Sanjana Nandani
-- Ganesh Padme
+<div align="center">
+
+| 👤 Name | 📧 Email |
+|---|---|
+| **Jashwant Nukala** | jashwantnukala2025.comp@mmcoe.edu.in |
+| **Aarushi Patil** | aarushipatil2025.comp@mmcoe.edu.in |
+| **Sanjana Nandani** | sanjananandani2025.comp@mmcoe.edu.in |
+| **Ganesh Padme** | ganeshpadme2025.comp@mmcoe.edu.in |
+
+*MMCOE · Computer Engineering · Batch of 2025*
+
+</div>
 
 ---
 
 ## 🌟 Future Scope
 
-- Live CoinGecko API Integration (real-time prices)
-- Python-based Advanced Statistical Analysis
-- Predictive Coin Performance using Machine Learning
-- Portfolio Simulator with custom investment inputs
-- Multi-year Comparison Dashboard (2018–2024)
-- Power BI / Tableau version
+- 🔴 **Live API Integration** — Real-time CoinGecko prices & market data
+- 🐍 **Python Analytics** — Advanced statistical modelling & backtesting
+- 🤖 **Machine Learning** — Predictive coin performance models
+- 💼 **Portfolio Simulator** — Custom investment allocation & returns tool
+- 📅 **Multi-Year Comparison** — Extended 2018 → 2024 dataset
+- 📊 **Power BI / Tableau** — Enterprise-grade BI version of the dashboard
 
 ---
+
+<div align="center">
+
 ---
 
-# Thank You.
+## 🔗 View the Live Dashboard
+
+### **[👉 https://jashwantnukala.github.io/crypdash/](https://jashwantnukala.github.io/crypdash/)**
+
+<br/>
+
+*Built with 💚 by Team CRYPDASH · MMCOE Computer Engineering · 2025*
+
+---
+
+⭐ **If you found this project useful, please give it a star!** ⭐
+
+<br/>
+
+# Thank You ❤️
+
+</div>

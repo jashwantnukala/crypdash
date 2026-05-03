@@ -2,7 +2,7 @@
 ### 📊 Data Analytics Project
 
 ![Crypto Analytics Banner](https://img.shields.io/badge/Project-Data%20Analytics-green?style=for-the-badge)
-![JavaScript](https://img.shields.io/badge/Tool-Vanilla%20JS%20%2B%20Chart.js-yellow?style=for-the-badge)
+![Excel](https://img.shields.io/badge/Tool-MS%20Excel-success?style=for-the-badge)
 ![Dashboard](https://img.shields.io/badge/Visualization-Interactive%20Dashboard-blue?style=for-the-badge)
 
 ---
